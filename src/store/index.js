@@ -51,6 +51,9 @@ export default new Vuex.Store({
     pushProducts(state, payload) {
       state.products.push(payload);
     },
+    pushCategory(state, payload) {
+      state.categories.push(payload);
+    },
   },
   actions: {},
   modules: {},

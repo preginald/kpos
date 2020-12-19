@@ -215,9 +215,9 @@ export default {
     DataTable,
   },
   methods: {
-    ...mapMutations(["pushProducts"]),
+    ...mapMutations(["pushProducts", "pushCategory"]),
     addCategory() {
-      this.categories.push(this.category);
+      this.pushCategory(this.category);
       this.category = "";
     },
     addProductRow(product) {
