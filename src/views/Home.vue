@@ -1,42 +1,24 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="2">
-        <v-card>
-          <v-card-title>Categories</v-card-title>
-          <v-card-text>
-            <div v-for="category in categories" :key="category.name">
-              <v-chip small label class="ma-2">{{ category.name }}</v-chip>
-            </div>
-          </v-card-text>
-          <div v-if="prefixes.length">
-            <v-card-title>Prefixes</v-card-title>
-            <v-card-text>
-              <div v-for="prefix in prefixes" :key="prefix.name">
-                <v-chip small label class="ma-2">{{ prefix.name }}</v-chip>
-              </div>
-            </v-card-text>
-          </div>
-          <div v-if="suffixes.length">
-            <v-card-title>Suffixes</v-card-title>
-            <v-card-text>
-              <div v-for="suffix in suffixes" :key="suffix.name">
-                <v-chip small label class="ma-2">{{ suffix.name }}</v-chip>
-              </div>
-            </v-card-text>
-          </div>
-        </v-card>
-      </v-col>
-
+      <Sidebar />
       <v-col cols="12" sm="10">
         <v-container>
           <v-row>
             <v-col sm="4">
               <v-text-field
-                v-on:keyup.enter="addCategory"
                 label="Enter categories"
-                v-model="category"
+                v-model="category.name"
               ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-checkbox label="Prefix" v-model="category.prefix"></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-checkbox label="Suffix" v-model="category.suffix"></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-btn @click="addCategory">Add Category</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -224,9 +206,14 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import Sidebar from "@/components/Sidebar.vue";
 import DataTable from "@/components/DataTable.vue";
 export default {
   name: "Home",
+  components: {
+    Sidebar,
+    DataTable,
+  },
   methods: {
     ...mapMutations(["pushProducts"]),
     addCategory() {
@@ -365,7 +352,7 @@ export default {
   },
   data: () => ({
     debug: true,
-    category: "",
+    category: {},
     activeProductCategory: {},
     selectedPrefixes: [],
     selectedSuffixes: [],
@@ -378,8 +365,5 @@ export default {
     product: [{ name: "", category: "", price: 0 }],
   }),
   computed: mapState(["categories", "productDatabase", "prefixes", "suffixes"]),
-  components: {
-    DataTable,
-  },
 };
 </script>
