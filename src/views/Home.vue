@@ -332,10 +332,6 @@ export default {
       this.suffix = { name: "", value: "" };
       this.getCategorySuffixes();
     },
-    addVersion() {
-      this.prefixs.push(this.prefix);
-      this.prefix = { name: "", category: this.prefix.category };
-    },
     getPrefixValue(prefix) {
       let n = this.prefixes.find((e) => e.name == prefix);
       return n.value;
