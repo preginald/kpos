@@ -229,8 +229,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
+import { mapState } from "vuex";
 export default {
   name: "Home",
   methods: {
@@ -423,19 +422,8 @@ export default {
       { text: "Suffix", value: "suffix" },
       { text: "Price", value: "price", align: "end" },
     ],
-    productDatabase: [
-      "Potato Cakes",
-      "Tomato",
-      "Lettuce",
-      "Cheese",
-      "Onion",
-      "Dim Sims",
-      "Spring Roll",
-      "Whiting",
-      "Barramundi",
-      "Butterfish",
-    ],
   }),
+  computed: mapState(["productDatabase"]),
   components: {},
 };
 </script>
