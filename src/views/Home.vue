@@ -2,9 +2,10 @@
   <v-container>
     <v-row>
       <Sidebar />
-      <v-col cols="12" sm="10">
-        <v-container>
-          <v-row>
+      <v-col cols="12" sm="9">
+        <v-card>
+          <v-card-title> Categories </v-card-title>
+          <v-card-text>
             <v-col sm="4">
               <v-text-field
                 label="Category name"
@@ -20,74 +21,80 @@
             <v-col v-if="category.name">
               <v-btn @click="addCategory">Add Category</v-btn>
             </v-col>
-          </v-row>
-        </v-container>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-select
-                :items="categories"
-                v-model="activeProductCategory"
-                item-text="name"
-                item-value="value"
-                label="Select category"
-                @change="getCategoryElements"
-                return-object
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-row v-if="activeProductCategory.prefix">
-            <v-col>
-              <v-text-field
-                label="Prefix name"
-                v-model="prefix.name"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Prefix value"
-                v-model="prefix.value"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                number
-                label="Price variation"
-                v-model="prefix.price"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-btn @click="addPrefix">Add Prefix</v-btn>
-            </v-col>
-          </v-row>
-          <v-row v-if="activeProductCategory.suffix">
-            <v-col>
-              <v-text-field
-                label="Suffix name"
-                v-model="suffix.name"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Suffix value"
-                v-model="suffix.value"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                number
-                label="Price variation"
-                v-model="suffix.price"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-btn @click="addSuffix">Add Suffix</v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
+          </v-card-text>
+        </v-card>
+        <v-card class="mt-3">
+          <v-card-title>Category</v-card-title>
+          <v-card-text>
+            <v-select
+              :items="categories"
+              v-model="activeProductCategory"
+              item-text="name"
+              item-value="value"
+              label="Select category"
+              @change="getCategoryElements"
+              return-object
+            ></v-select>
+          </v-card-text>
+          <v-card-text v-if="activeProductCategory.prefix">
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="Prefix name"
+                  v-model="prefix.name"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Prefix value"
+                  v-model="prefix.value"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  number
+                  label="Price variation"
+                  v-model="prefix.price"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-btn @click="addPrefix">Add Prefix</v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card v-if="activeProductCategory.suffix">
+            <v-card-text>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    label="Suffix name"
+                    v-model="suffix.name"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Suffix value"
+                    v-model="suffix.value"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    number
+                    label="Price variation"
+                    v-model="suffix.price"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-btn @click="addSuffix">Add Suffix</v-btn>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-card>
 
-        <v-container v-if="activeProductCategory.name">
-          <v-row>
+        <v-card class="mt-3" v-if="activeProductCategory.name">
+          <v-card-title> Products </v-card-title>
+          <v-card-text>
             <v-col
               v-for="prefix in prefixesByCategory"
               :key="prefix.name"
@@ -100,8 +107,8 @@
                 :value="prefix.name"
               ></v-checkbox>
             </v-col>
-          </v-row>
-          <v-row>
+          </v-card-text>
+          <v-card-text>
             <v-col
               v-for="suffix in suffixesByCategory"
               :key="suffix.name"
@@ -114,57 +121,61 @@
                 :value="suffix.name"
               ></v-checkbox>
             </v-col>
-          </v-row>
-          <v-row v-for="(value, i) in productsToInput" :key="i">
-            <v-col>
-              <v-combobox
-                label="Product"
-                type="text"
-                v-model="product[i].name"
-                :items="productDatabase"
-              ></v-combobox>
-            </v-col>
-            <v-col v-if="activeProductCategory.add">
-              <v-text-field
-                number
-                label="Price add"
-                v-model="product[i].addPrice"
-              ></v-text-field>
-            </v-col>
-            <v-col v-if="activeProductCategory.minus">
-              <v-text-field
-                number
-                label="Price minus"
-                v-model="product[i].minusPrice"
-              ></v-text-field>
-            </v-col>
-            <v-col
-              v-if="!activeProductCategory.add || !activeProductCategory.minus"
-            >
-              <v-text-field
-                number
-                label="Price"
-                v-model="product[i].price"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-btn
-                v-if="i == product.length - 1"
-                @click="addProductRow(product[i].name)"
-                >+ 1</v-btn
-              >
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
+          </v-card-text>
+          <v-card>
+            <v-card-text>
+              <v-row v-for="(value, i) in productsToInput" :key="i">
+                <v-col>
+                  <v-combobox
+                    label="Product"
+                    type="text"
+                    v-model="product[i].name"
+                    :items="productDatabase"
+                  ></v-combobox>
+                </v-col>
+                <v-col v-if="activeProductCategory.add">
+                  <v-text-field
+                    number
+                    label="Price add"
+                    v-model="product[i].addPrice"
+                  ></v-text-field>
+                </v-col>
+                <v-col v-if="activeProductCategory.minus">
+                  <v-text-field
+                    number
+                    label="Price minus"
+                    v-model="product[i].minusPrice"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  v-if="
+                    !activeProductCategory.add || !activeProductCategory.minus
+                  "
+                >
+                  <v-text-field
+                    number
+                    label="Price"
+                    v-model="product[i].price"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-btn
+                    v-if="i == product.length - 1"
+                    @click="addProductRow(product[i].name)"
+                    >+ 1</v-btn
+                  >
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-actions>
               <v-btn @click="addProduct">Add Products</v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
+            </v-card-actions>
+          </v-card>
+        </v-card>
+        <DataTable class="mt-3" />
       </v-col>
     </v-row>
     <v-divider></v-divider>
-    <DataTable />
     <Debug v-if="debug" />
   </v-container>
 </template>
