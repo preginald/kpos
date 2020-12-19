@@ -165,42 +165,7 @@
     </v-row>
     <v-divider></v-divider>
     <DataTable />
-    <v-row v-if="debug">
-      <v-col>
-        <h3>Categories</h3>
-        <pre>
-      {{ categories }}
-    </pre
-        >
-        <h3>Active Category</h3>
-        <pre>
-      {{ activeProductCategory }}
-    </pre
-        >
-
-        <h3>Prefixes</h3>
-        <pre>
-      {{ prefixes }}
-    </pre
-        >
-        <h3>Suffixes</h3>
-        <pre>
-      {{ suffixes }}
-    </pre
-        >
-        <h3>Products</h3>
-        <pre>
-      {{ products }}
-      {{ selectedSuffixes }}
-    </pre
-        >
-        <h3>Prefixes by category</h3>
-        <pre>
-      {{ prefixesByCategory }}
-    </pre
-        >
-      </v-col>
-    </v-row>
+    <Debug v-if="debug"> </Debug>
   </v-container>
 </template>
 
@@ -208,11 +173,14 @@
 import { mapState, mapMutations } from "vuex";
 import Sidebar from "@/components/Sidebar.vue";
 import DataTable from "@/components/DataTable.vue";
+import Debug from "@/components/Debug.vue";
+
 export default {
   name: "Home",
   components: {
     Sidebar,
     DataTable,
+    Debug,
   },
   methods: {
     ...mapMutations(["pushProducts", "pushCategory"]),
