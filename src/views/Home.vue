@@ -7,17 +7,17 @@
           <v-row>
             <v-col sm="4">
               <v-text-field
-                label="Enter categories"
+                label="Category name"
                 v-model="category.name"
               ></v-text-field>
             </v-col>
-            <v-col>
+            <v-col v-if="category.name">
               <v-checkbox label="Prefix" v-model="category.prefix"></v-checkbox>
             </v-col>
-            <v-col>
+            <v-col v-if="category.name">
               <v-checkbox label="Suffix" v-model="category.suffix"></v-checkbox>
             </v-col>
-            <v-col>
+            <v-col v-if="category.name">
               <v-btn @click="addCategory">Add Category</v-btn>
             </v-col>
           </v-row>
@@ -218,6 +218,8 @@ export default {
     ...mapMutations(["pushProducts", "pushCategory"]),
     addCategory() {
       this.pushCategory(this.category);
+
+      this.activeProductCategory = this.category;
       this.category = "";
     },
     addProductRow(product) {
