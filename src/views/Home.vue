@@ -131,15 +131,15 @@
                 v-model="product[i].addPrice"
               ></v-text-field>
             </v-col>
-            <v-col v-if="activeProductCategory.hold">
+            <v-col v-if="activeProductCategory.minus">
               <v-text-field
                 number
-                label="Price hold"
-                v-model="product[i].holdPrice"
+                label="Price minus"
+                v-model="product[i].minusPrice"
               ></v-text-field>
             </v-col>
             <v-col
-              v-if="!activeProductCategory.add || !activeProductCategory.hold"
+              v-if="!activeProductCategory.add || !activeProductCategory.minus"
             >
               <v-text-field
                 number
@@ -250,11 +250,11 @@ export default {
             price: product.addPrice,
           });
         }
-        if (product.holdPrice) {
+        if (product.minusPrice) {
           productsArray.push({
             name: "No " + product.name,
             category: this.activeProductCategory.name,
-            price: product.holdPrice,
+            price: product.minusPrice,
           });
         }
       });
