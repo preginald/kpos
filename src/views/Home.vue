@@ -223,11 +223,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import DataTable from "@/components/DataTable.vue";
 export default {
   name: "Home",
   methods: {
+    ...mapMutations(["pushProducts"]),
     addCategory() {
       this.categories.push(this.category);
       this.category = "";
@@ -296,7 +297,8 @@ export default {
         });
       }
       productsArray.forEach((product) => {
-        this.products.push(product);
+        // this.products.push(product);
+        this.pushProducts(product);
       });
       // this.product = [{ name: "", price: 0 }];
       this.productsToInput = 1;

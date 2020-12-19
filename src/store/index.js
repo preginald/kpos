@@ -47,7 +47,11 @@ export default new Vuex.Store({
     ],
     products: [],
   },
-  mutations: {},
+  mutations: {
+    pushProducts(state, payload) {
+      state.products.push(payload);
+    },
+  },
   actions: {},
   modules: {},
 });
