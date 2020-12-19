@@ -249,7 +249,6 @@ export default {
       }
     },
     addProduct() {
-      console.log(this.product);
       let productsArray = [];
       this.product.forEach((product) => {
         if (product.price) {
@@ -371,46 +370,15 @@ export default {
     debug: true,
     category: "",
     activeProductCategory: {},
-    categories: [
-      { name: "Burgers", value: "burgers", prefix: true },
-      { name: "Burger Extra", value: "burger extra", add: true, hold: true },
-      { name: "Fish", value: "fish", suffix: true, prefix: true },
-      { name: "Souvlaki", value: "souvlaki" },
-    ],
-    // categories: [],
     selectedPrefixes: [],
     selectedSuffixes: [],
     prefixesByCategory: [],
     suffixesByCategory: [],
-    prefixes: [
-      {
-        name: "GF",
-        value: "GF",
-        category: "Fish",
-        price: ".50",
-      },
-    ],
-    suffixes: [
-      {
-        name: "Grill",
-        value: "G",
-        category: "Fish",
-        price: "0.40",
-      },
-      {
-        name: "Flour",
-        value: "F",
-        category: "Fish",
-        price: "0",
-      },
-    ],
     products: [],
     suffix: { name: "", category: "" },
     prefix: { name: "", category: "" },
     productsToInput: 1,
-    // product: { name: "", category: "", price: 0 },
     product: [{ name: "", category: "", price: 0 }],
-    // productsToInput: [{ name: "", category: "", price: 0 }],
     headers: [
       { text: "Product", value: "name" },
       { text: "Prefix", value: "prefix" },
@@ -419,7 +387,7 @@ export default {
       { text: "Price", value: "price", align: "end" },
     ],
   }),
-  computed: mapState(["productDatabase"]),
+  computed: mapState(["categories", "productDatabase", "prefixes", "suffixes"]),
   components: {},
 };
 </script>
