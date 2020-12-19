@@ -45,6 +45,7 @@ export default new Vuex.Store({
         price: '0',
       },
     ],
+    products: [],
   },
   mutations: {},
   actions: {},

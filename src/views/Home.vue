@@ -179,16 +179,10 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-data-table
-          v-if="products.length"
-          :headers="headers"
-          :items="products"
-          class="elevation-1"
-        >
-        </v-data-table>
       </v-col>
     </v-row>
     <v-divider></v-divider>
+    <DataTable />
     <v-row v-if="debug">
       <v-col>
         <h3>Categories</h3>
@@ -230,6 +224,7 @@
 
 <script>
 import { mapState } from "vuex";
+import DataTable from "@/components/DataTable.vue";
 export default {
   name: "Home",
   methods: {
@@ -379,15 +374,10 @@ export default {
     prefix: { name: "", category: "" },
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
-    headers: [
-      { text: "Product", value: "name" },
-      { text: "Prefix", value: "prefix" },
-      { text: "Category", value: "category" },
-      { text: "Suffix", value: "suffix" },
-      { text: "Price", value: "price", align: "end" },
-    ],
   }),
   computed: mapState(["categories", "productDatabase", "prefixes", "suffixes"]),
-  components: {},
+  components: {
+    DataTable,
+  },
 };
 </script>
