@@ -165,7 +165,7 @@
     </v-row>
     <v-divider></v-divider>
     <DataTable />
-    <Debug v-if="debug"> </Debug>
+    <Debug v-if="debug" />
   </v-container>
 </template>
 
@@ -176,7 +176,6 @@ import DataTable from "@/components/DataTable.vue";
 import Debug from "@/components/Debug.vue";
 
 export default {
-  name: "Home",
   components: {
     Sidebar,
     DataTable,
@@ -321,7 +320,6 @@ export default {
     },
   },
   data: () => ({
-    debug: true,
     category: {},
     activeProductCategory: {},
     selectedPrefixes: [],
@@ -334,6 +332,12 @@ export default {
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
   }),
-  computed: mapState(["categories", "productDatabase", "prefixes", "suffixes"]),
+  computed: mapState([
+    "debug",
+    "categories",
+    "productDatabase",
+    "prefixes",
+    "suffixes",
+  ]),
 };
 </script>

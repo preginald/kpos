@@ -3,6 +3,12 @@
     <v-app-bar app>
       <v-spacer></v-spacer>
       <v-switch
+        v-model="$store.state.debug"
+        label="Debug"
+        hide-details
+        class="pr-3"
+      ></v-switch>
+      <v-switch
         v-model="$vuetify.theme.dark"
         :label="$vuetify.theme.dark ? 'Dark' : 'Light'"
         hide-details
@@ -21,8 +27,6 @@ export default {
 
   components: {},
 
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
 };
 </script>
