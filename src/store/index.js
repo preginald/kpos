@@ -47,6 +47,7 @@ export default new Vuex.Store({
       },
     ],
     products: [],
+    asIsMenu: [],
   },
   mutations: {
     pushProducts(state, payload) {
