@@ -4,6 +4,7 @@
       <v-toolbar-title>KPOS</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
+      <v-btn text to="/menu">Menu</v-btn>
       <v-btn text to="/products">Products</v-btn>
       <v-btn text to="/test">Test</v-btn>
       <v-spacer></v-spacer>
