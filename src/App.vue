@@ -1,6 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app>
+    <v-app-bar app dense>
+      <v-toolbar-title>KPOS</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn text to="/">Home</v-btn>
+      <v-btn text to="/products">Products</v-btn>
       <v-spacer></v-spacer>
       <v-switch
         v-model="$store.state.debug"

@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="3">
+  <v-col cols="12" lg="2" sm="3">
     <v-card>
       <v-card-title>Categories</v-card-title>
       <v-card-text>

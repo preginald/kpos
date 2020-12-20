@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <Sidebar />
-      <v-col cols="12" sm="9">
+      <v-col cols="12" lg="10" sm="9">
         <v-card>
           <v-card-title> Categories </v-card-title>
           <v-card-text>
