@@ -5,6 +5,7 @@
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
       <v-btn text to="/products">Products</v-btn>
+      <v-btn text to="/test">Test</v-btn>
       <v-spacer></v-spacer>
       <v-switch
         v-model="$store.state.debug"
