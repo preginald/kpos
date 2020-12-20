@@ -18,6 +18,7 @@ export default new Vuex.Store({
       'Barramundi',
       'Butterfish',
     ],
+    menu: [],
     categories: [
       { name: 'Burgers', value: 'burgers', prefix: true },
       { name: 'Burger Extra', value: 'burger extra', add: true, minus: true },
@@ -50,6 +51,9 @@ export default new Vuex.Store({
     asIsMenu: [],
   },
   mutations: {
+    pushProductToMenu(state, product) {
+      state.menu.push(product);
+    },
     pushProducts(state, payload) {
       state.products.push(payload);
     },
@@ -59,4 +63,9 @@ export default new Vuex.Store({
   },
   actions: {},
   modules: {},
+  getters: {
+    getCategoryByName: (state) => (name) => {
+      return state.categories.find((category) => category.name == name);
+    },
+  },
 });
