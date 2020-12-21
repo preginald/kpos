@@ -6,6 +6,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     debug: true,
+    e1: 1,
+    steps: [
+      { number: 1, name: 'Import' },
+      { number: 2, name: 'Analyse' },
+      { number: 3, name: 'Export' },
+    ],
     productDatabase: [
       'Potato Cakes',
       'Tomato',

@@ -1,5 +1,22 @@
 <template>
   <v-container>
+    <v-stepper v-model="e1">
+      <v-stepper-header>
+        <template v-for="step in steps">
+          <v-stepper-step
+            :complete="e1 > step.number"
+            :key="step.number"
+            :step="step.number"
+          >
+            {{ step.name }}
+          </v-stepper-step>
+          <v-divider
+            v-if="step.number < steps.length"
+            :key="step.number"
+          ></v-divider>
+        </template>
+      </v-stepper-header>
+    </v-stepper>
     <v-row>
       <Sidebar />
       <v-col cols="12" lg="10" sm="9">
@@ -66,7 +83,7 @@ export default {
     MenuTable,
   },
   computed: {
-    ...mapState(["categories", "productDatabase"]),
+    ...mapState(["categories", "productDatabase", "e1", "steps"]),
     ...mapGetters(["getCategoryByName"]),
   },
   data: () => ({
