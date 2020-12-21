@@ -102,11 +102,13 @@ export default {
     prepareProducts() {
       let productsArray = [];
       this.product.forEach((product) => {
-        productsArray.push({
-          name: product.name,
-          category: this.getCategoryName(),
-          price: this.priceToFixed(product.price),
-        });
+        if (product.name) {
+          productsArray.push({
+            name: product.name,
+            category: this.getCategoryName(),
+            price: this.priceToFixed(product.price),
+          });
+        }
       });
       this.saveProductsToMenu(productsArray);
     },
