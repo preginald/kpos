@@ -15,71 +15,111 @@
             ></v-combobox>
           </v-card-text>
           <v-card-text v-if="selectedCategory">
-            <v-row>
+            <v-row v-for="(value, i) in productsToInput" :key="i">
               <v-col>
                 <v-combobox
                   label="Product"
                   type="text"
-                  v-model="product.name"
+                  v-model="product[i].name"
                   :items="productDatabase"
                 ></v-combobox>
               </v-col>
               <v-col>
                 <v-text-field
-                  v-on:keyup.enter="saveProductToMenu"
                   number
                   label="Price"
-                  v-model="product.price"
+                  v-model="product[i].price"
                 ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-btn
+                  v-if="
+                    i == product.length - 1 &&
+                    product[i].name &&
+                    product[i].price
+                  "
+                  @click="addProductRow()"
+                  >+ 1</v-btn
+                >
               </v-col>
             </v-row>
           </v-card-text>
+          <v-card-actions>
+            <v-btn @click="prepareProducts">Add Products</v-btn>
+          </v-card-actions>
         </v-card>
-        <DataTable />
+        <MenuTable />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from "vuex";
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import Sidebar from "@/components/Sidebar.vue";
-import DataTable from "@/components/DataTable.vue";
+import MenuTable from "@/components/MenuTable.vue";
 
 export default {
   name: "Products",
   components: {
     Sidebar,
-    DataTable,
+    MenuTable,
   },
-  //   computed: {
-  //       ...mapState([
-  //     "categories",
-  //     "productDatabase",
-  //   ])},
   computed: {
     ...mapState(["categories", "productDatabase"]),
     ...mapGetters(["getCategoryByName"]),
   },
   data: () => ({
     activeProductCategory: {},
+    productsToInput: 1,
+    product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
     selectedCategory: "",
-    product: { name: "", price: "" },
   }),
   methods: {
-    ...mapMutations(["pushProducts", "pushProductToMenu", "pushCategory"]),
+    // ...mapMutations(["pushProducts", "pushProductToMenu", "pushCategory"]),
+    ...mapMutations(["pushProducts", "pushCategory"]),
+    ...mapActions(["saveProductToMenu", "saveProductsToMenu"]),
     setActiveCategory() {
       if (this.getCategoryByName(this.selectedCategory.name)) {
         //
       } else {
-        // console.log(this.selectedCategory);
         this.pushCategory({ name: this.selectedCategory });
       }
     },
-    saveProductToMenu() {
-      this.pushProductToMenu(this.product);
+    getCategoryName() {
+      if (typeof this.selectedCategory === "object") {
+        return this.selectedCategory.name;
+      } else {
+        return this.selectedCategory;
+      }
     },
+    addProductRow() {
+      // this.removeFromProductDatabase(product);
+      this.product.push({ name: "", price: 0 });
+      this.productsToInput++;
+    },
+    prepareProducts() {
+      let productsArray = [];
+      this.product.forEach((product) => {
+        productsArray.push({
+          name: product.name,
+          category: this.getCategoryName(),
+          price: this.priceToFixed(product.price),
+        });
+      });
+      this.saveProductsToMenu(productsArray);
+    },
+    priceToFixed(price) {
+      return parseFloat(price).toFixed(2);
+    },
+    saveProducts() {},
+    // saveProduct() {
+    //   this.product.category = this.getCategoryName();
+    //   this.product.price = parseFloat(this.product.price).toFixed(2);
+    //   this.saveProductToMenu(this.product);
+    //   this.product = { name: "", price: this.product.price };
+    // },
   },
 };
 </script>
