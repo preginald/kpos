@@ -64,6 +64,8 @@ export default new Vuex.Store({
       'Bacon',
     ],
     menu: [],
+    export: [],
+    selectedMenuRows: [],
     categories: [
       { name: 'Burgers', value: 'burgers', prefix: true },
       { name: 'Burger Extra', value: 'burger extra', add: true, minus: true },
@@ -110,6 +112,9 @@ export default new Vuex.Store({
     pushProductsToMenu(state, products) {
       state.menu.push(products);
     },
+    pushProductsToExport(state, products) {
+      state.export.push(products);
+    },
     pushProducts(state, payload) {
       state.products.push(payload);
     },
@@ -127,6 +132,9 @@ export default new Vuex.Store({
     },
     setSearch(state, search) {
       state.search = search;
+    },
+    setSelectedMenuRows(state, menuRows) {
+      state.selectedMenuRows = menuRows;
     },
     setStepper(state, step) {
       state.stepper = step;
@@ -151,6 +159,11 @@ export default new Vuex.Store({
         }
       });
     },
+    saveProductsToExport({ getters }, products) {
+      products.forEach((product) => {
+        console.log(getters.getIndexOfExportProductByNameCategory(product));
+      });
+    },
     changeCategory({ commit, getters }, category) {
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
@@ -168,6 +181,20 @@ export default new Vuex.Store({
         (menuProduct) =>
           menuProduct.name === product.name &&
           menuProduct.category === product.category
+      );
+    },
+    getExportProductByNameCategory: (state) => (product) => {
+      return state.export.find(
+        (exportProduct) =>
+          exportProduct.name === product.name &&
+          exportProduct.category === product.category
+      );
+    },
+    getIndexOfExportProductByNameCategory: (state) => (product) => {
+      return state.export.findIndex(
+        (exportProduct) =>
+          exportProduct.name === product.name &&
+          exportProduct.category === product.category
       );
     },
     getPrefixesByCategory: (state) => {
