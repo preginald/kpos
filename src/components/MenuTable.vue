@@ -11,7 +11,7 @@
     </v-card-title>
 
     <v-data-table
-      v-model="selected"
+      v-model="toggleMenuRows"
       :headers="headers"
       :items="menu"
       :search="search"
@@ -61,7 +61,7 @@ export default {
     max25chars: (v) => v.length <= 25 || "Input too long!",
     pagination: {},
 
-    selected: [],
+    // selected: [],
     headers: [
       { text: "Product", value: "name" },
       { text: "Category", value: "category" },
@@ -69,7 +69,7 @@ export default {
     ],
   }),
   computed: {
-    ...mapState(["menu", "search", "stepper"]),
+    ...mapState(["menu", "search", "selectedMenuRows", "stepper"]),
     test: {
       set(search) {
         this.setSearch(search);
@@ -78,9 +78,17 @@ export default {
         return this.search;
       },
     },
+    toggleMenuRows: {
+      set(selectedMenuRows) {
+        this.setSelectedMenuRows(selectedMenuRows);
+      },
+      get() {
+        return this.selectedMenuRows;
+      },
+    },
   },
   methods: {
-    ...mapMutations(["setSearch"]),
+    ...mapMutations(["setSearch", "setSelectedMenuRows"]),
     process() {
       console.log(this.selected);
     },
