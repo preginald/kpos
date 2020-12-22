@@ -15,7 +15,8 @@
       :headers="headers"
       :items="menu"
       :search="search"
-      item-key="name+caegory"
+      item-key="name"
+      show-select
     >
       show-select class="elevation-1" >
       <template v-slot:item.name="props">

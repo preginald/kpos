@@ -1,25 +1,9 @@
 <template>
   <v-container>
-    <v-stepper v-model="e1">
-      <v-stepper-header>
-        <template v-for="step in steps">
-          <v-stepper-step
-            :complete="e1 > step.number"
-            :key="step.number"
-            :step="step.number"
-          >
-            {{ step.name }}
-          </v-stepper-step>
-          <v-divider
-            v-if="step.number < steps.length"
-            :key="step.number"
-          ></v-divider>
-        </template>
-      </v-stepper-header>
-    </v-stepper>
     <v-row>
       <Sidebar />
       <v-col cols="12" lg="10" sm="9">
+        <Stepper />
         <v-card>
           <v-card-text>
             <v-combobox
@@ -46,6 +30,7 @@
                   number
                   label="Price"
                   v-model="product[i].price"
+                  v-on:keyup.enter="addProductRow()"
                 ></v-text-field>
               </v-col>
               <v-col>
@@ -74,12 +59,14 @@
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import Sidebar from "@/components/Sidebar.vue";
+import Stepper from "@/components/Stepper.vue";
 import MenuTable from "@/components/MenuTable.vue";
 
 export default {
   name: "Products",
   components: {
     Sidebar,
+    Stepper,
     MenuTable,
   },
   computed: {
@@ -112,7 +99,6 @@ export default {
       }
     },
     addProductRow() {
-      // this.removeFromProductDatabase(product);
       this.product.push({ name: "", price: 0 });
       this.productsToInput++;
     },
