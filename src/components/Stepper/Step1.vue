@@ -5,7 +5,7 @@
         v-on:keyup.enter="setActiveCategory"
         label="Category"
         type="text"
-        v-model="selectedCategory"
+        v-model="selectCategory"
         item-text="name"
         :items="categories"
       ></v-combobox>
@@ -55,20 +55,36 @@ export default {
   name: "Products",
   components: { MenuTable },
   computed: {
-    ...mapState(["categories", "productDatabase", "e1", "steps"]),
+    ...mapState(["categories", "selectedCategory", "productDatabase", "steps"]),
     ...mapGetters(["getCategoryByName"]),
+    selectCategory: {
+      set(category) {
+        this.setSelectedCategory(category);
+        this.setSearchByCategory(category);
+      },
+      get() {
+        return this.selectedCategory;
+      },
+    },
   },
   data: () => ({
     activeProductCategory: {},
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
-    selectedCategory: "",
   }),
   methods: {
     // ...mapMutations(["pushProducts", "pushProductToMenu", "pushCategory"]),
-    ...mapMutations(["pushProducts", "pushCategory"]),
+    ...mapMutations([
+      "pushProducts",
+      "pushCategory",
+      "setSearchByCategory",
+      "setSelectedCategory",
+    ]),
     ...mapActions(["saveProductToMenu", "saveProductsToMenu"]),
+    process() {
+      console.log(this.selected);
+    },
     setActiveCategory() {
       if (this.getCategoryByName(this.selectedCategory.name)) {
         //

@@ -1,6 +1,5 @@
 <template>
   <v-card>
-    <v-card-title> Analyse </v-card-title>
     <v-card-text>
       <v-combobox
         v-on:keyup.enter="setActiveCategory"
@@ -11,7 +10,6 @@
         :items="categories"
       ></v-combobox>
     </v-card-text>
-
     <MenuTable />
   </v-card>
 </template>

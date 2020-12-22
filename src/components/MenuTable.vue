@@ -2,7 +2,7 @@
   <v-card v-if="menu.length">
     <v-card-title>
       <v-text-field
-        v-model="search"
+        v-model="test"
         append-icon="mdi-magnify"
         label="Search"
         single-line
@@ -47,14 +47,11 @@
         <v-btn v-bind="attrs" text @click="snack = false"> Close </v-btn>
       </template>
     </v-snackbar>
-    <v-card-actions>
-      <v-btn @click="process">Go!</v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -65,15 +62,25 @@ export default {
     pagination: {},
 
     selected: [],
-    search: "",
     headers: [
       { text: "Product", value: "name" },
       { text: "Category", value: "category" },
       { text: "Price", value: "price", align: "end" },
     ],
   }),
-  computed: mapState(["menu"]),
+  computed: {
+    ...mapState(["menu", "search", "stepper"]),
+    test: {
+      set(search) {
+        this.setSearch(search);
+      },
+      get() {
+        return this.search;
+      },
+    },
+  },
   methods: {
+    ...mapMutations(["setSearch"]),
     process() {
       console.log(this.selected);
     },

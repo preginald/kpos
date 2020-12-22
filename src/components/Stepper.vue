@@ -6,7 +6,6 @@
           :complete="stepper > step.number"
           :key="step.number"
           :step="step.number"
-          editable
         >
           {{ step.name }}
         </v-stepper-step>
@@ -19,23 +18,34 @@
     <v-stepper-items>
       <v-stepper-content step="1"> <Step1 /> </v-stepper-content>
       <v-stepper-content step="2"> <Step2 /> </v-stepper-content>
-      <v-stepper-content step="3"> test 3 </v-stepper-content>
+      <v-stepper-content step="3"> <Step3 /> </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 import Step1 from "@/components/Stepper/Step1.vue";
 import Step2 from "@/components/Stepper/Step2.vue";
+import Step3 from "@/components/Stepper/Step3.vue";
 
 export default {
-  data: () => ({
-    stepper: 1,
-  }),
-  components: { Step1, Step2 },
-  computed: mapState(["steps"]),
-  methods: {},
+  data: () => ({}),
+  components: { Step1, Step2, Step3 },
+  computed: {
+    ...mapState(["steps", "stepper"]),
+    selectCategory: {
+      set() {
+        this.setStepper;
+      },
+      get() {
+        return this.stepper;
+      },
+    },
+  },
+  methods: {
+    ...mapMutations(["setStepper"]),
+  },
 };
 </script>

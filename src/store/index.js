@@ -12,6 +12,7 @@ export default new Vuex.Store({
       { number: 2, name: 'Analyse' },
       { number: 3, name: 'Export' },
     ],
+    search: '',
     productDatabase: [
       'Potato Cakes',
       'Tomato',
@@ -98,6 +99,7 @@ export default new Vuex.Store({
     ],
     products: [],
     asIsMenu: [],
+    selectedCategory: '',
   },
   mutations: {
     pushProductToMenu(state, product) {
@@ -114,6 +116,18 @@ export default new Vuex.Store({
     },
     clearProductName(state) {
       state.product.name = '';
+    },
+    setSelectedCategory(state, category) {
+      state.selectedCategory = category;
+    },
+    setSearchByCategory(state) {
+      state.search = state.selectedCategory.name;
+    },
+    setSearch(state, search) {
+      state.search = search;
+    },
+    setStepper(state, step) {
+      state.stepper = step;
     },
   },
   actions: {
