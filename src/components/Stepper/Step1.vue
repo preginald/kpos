@@ -59,8 +59,7 @@ export default {
     ...mapGetters(["getCategoryByName"]),
     selectCategory: {
       set(category) {
-        this.setSelectedCategory(category);
-        this.setSearchByCategory(category);
+        this.changeCategory(category);
       },
       get() {
         return this.selectedCategory;
@@ -79,9 +78,13 @@ export default {
       "pushProducts",
       "pushCategory",
       "setSearchByCategory",
-      "setSelectedCategory",
+      // "setSelectedCategory",
     ]),
-    ...mapActions(["saveProductToMenu", "saveProductsToMenu"]),
+    ...mapActions([
+      "changeCategory",
+      "saveProductToMenu",
+      "saveProductsToMenu",
+    ]),
     process() {
       console.log(this.selected);
     },
