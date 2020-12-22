@@ -17,7 +17,7 @@
       </template>
     </v-stepper-header>
     <v-stepper-items>
-      <v-stepper-content step="1"> test 1 </v-stepper-content>
+      <v-stepper-content step="1"> <Step1 /> </v-stepper-content>
       <v-stepper-content step="2"> test 2 </v-stepper-content>
       <v-stepper-content step="3"> test 3 </v-stepper-content>
     </v-stepper-items>
@@ -27,10 +27,13 @@
 <script>
 import { mapState } from "vuex";
 
+import Step1 from "@/components/Stepper/Step1.vue";
+
 export default {
   data: () => ({
     stepper: 1,
   }),
+  components: { Step1 },
   computed: mapState(["steps"]),
   methods: {},
 };
