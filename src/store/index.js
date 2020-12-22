@@ -120,17 +120,27 @@ export default new Vuex.Store({
     saveProductToMenu({ commit }, product) {
       commit('pushProductToMenu', product);
     },
-    saveProductsToMenu({ commit }, products) {
+    saveProductsToMenu({ commit, getters }, products) {
       products.forEach((product) => {
-        commit('pushProductToMenu', product);
+        if (
+          typeof getters.getMenuProductByNameCategory(product) === 'undefined'
+        ) {
+          commit('pushProductToMenu', product);
+        }
       });
-      // commit('pushProductsToMenu', products);
     },
   },
   modules: {},
   getters: {
     getCategoryByName: (state) => (name) => {
       return state.categories.find((category) => category.name == name);
+    },
+    getMenuProductByNameCategory: (state) => (product) => {
+      return state.menu.find(
+        (menuProduct) =>
+          menuProduct.name === product.name &&
+          menuProduct.category === product.category
+      );
     },
   },
 });

@@ -114,6 +114,8 @@ export default {
         }
       });
       this.saveProductsToMenu(productsArray);
+      this.product = [{ name: "", category: "", price: 0 }];
+      this.productsToInput = 1;
     },
     priceToFixed(price) {
       return parseFloat(price).toFixed(2);
