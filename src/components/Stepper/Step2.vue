@@ -13,10 +13,10 @@
         ></v-combobox>
         <v-spacer></v-spacer>
 
-        <v-btn-toggle v-model="toggle_exclusive" dense group>
+        <v-btn-toggle v-model="toggle_multiple" dense group>
           <v-btn v-on:click="togglePrefix" :value="1" text> PREFIX </v-btn>
 
-          <v-btn :value="2" text> SUFFIX </v-btn>
+          <v-btn v-on:click="toggleSuffix" :value="2" text> SUFFIX </v-btn>
 
           <v-btn :value="3" text> INCREMENT </v-btn>
 
@@ -50,6 +50,32 @@
         </v-col>
       </v-row>
     </v-card-text>
+    <v-card-text v-if="form.suffix">
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Suffix name"
+            v-model="suffix.name"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Suffix value"
+            v-model="suffix.value"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            number
+            label="Price variation"
+            v-model="suffix.price"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-btn @click="addSuffix">Add Suffix</v-btn>
+        </v-col>
+      </v-row>
+    </v-card-text>
     <v-card-actions>
       <v-col
         v-for="prefix in prefixesByCategory"
@@ -78,6 +104,9 @@
         ></v-checkbox>
       </v-col>
     </v-card-actions>
+    <v-card-actions>
+      <v-btn @click="addProducts">Add Products</v-btn>
+    </v-card-actions>
 
     <MenuTable />
   </v-card>
@@ -94,6 +123,7 @@ export default {
   computed: {
     ...mapState([
       "selectedCategory",
+      "selectedMenuRows",
       "categories",
       "productDatabase",
       "e1",
@@ -116,7 +146,7 @@ export default {
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
-    toggle_exclusive: 0,
+    toggle_multiple: [],
     form: {
       prefix: false,
       suffix: false,
@@ -124,11 +154,12 @@ export default {
       zulu: false,
     },
     prefix: { name: "", value: "", category: "", price: "" },
+    suffix: { name: "", value: "", category: "", price: "" },
     selectedPrefixes: [],
     selectedSuffixes: [],
   }),
   methods: {
-    ...mapMutations(["pushProducts", "pushCategory"]),
+    ...mapMutations(["pushProducts", "pushCategory", "pushProductsToExport"]),
     ...mapActions([
       "changeCategory",
       "saveProductToMenu",
@@ -137,16 +168,28 @@ export default {
     togglePrefix() {
       this.form.prefix = !this.form.prefix;
     },
+    toggleSuffix() {
+      this.form.suffix = !this.form.suffix;
+    },
     addPrefix() {
       let prefix = {
         name: this.prefix.name,
         value: this.prefix.value,
-        category: this.activeProductCategory.name,
+        category: this.selectedCategory.name,
         price: this.prefix.price,
       };
-      this.prefixes.push(prefix);
+      this.prefixesByCategory.push(prefix);
       this.prefix = { name: "", value: "" };
-      this.getCategoryPrefixes();
+    },
+    addSuffix() {
+      let suffix = {
+        name: this.suffix.name,
+        value: this.suffix.value,
+        category: this.selectedCategory.name,
+        price: this.suffix.price,
+      };
+      this.suffixesByCategory.push(suffix);
+      this.suffix = { name: "", value: "" };
     },
     setActiveCategory() {
       if (this.getCategoryByName(this.selectedCategory.name)) {
@@ -184,7 +227,23 @@ export default {
     priceToFixed(price) {
       return parseFloat(price).toFixed(2);
     },
-    saveProducts() {},
+    addProducts() {
+      console.log(this.selectedMenuRows);
+      let productsArray = [];
+      this.selectedMenuRows.forEach((product) => {
+        if (product.price) {
+          productsArray.push({
+            name: product.name,
+            category: product.category,
+            price: product.price,
+          });
+        }
+      });
+
+      productsArray.forEach((product) => {
+        this.pushProductsToExport(product);
+      });
+    },
   },
 };
 </script>
