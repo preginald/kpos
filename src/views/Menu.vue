@@ -4,7 +4,6 @@
       <Sidebar />
       <v-col cols="12" lg="10" sm="9">
         <Stepper />
-        <MenuTable />
       </v-col>
     </v-row>
   </v-container>
@@ -13,14 +12,12 @@
 <script>
 import Sidebar from "@/components/Sidebar.vue";
 import Stepper from "@/components/Stepper.vue";
-import MenuTable from "@/components/MenuTable.vue";
 
 export default {
   name: "Products",
   components: {
     Sidebar,
     Stepper,
-    MenuTable,
   },
   data: () => ({
     activeProductCategory: {},

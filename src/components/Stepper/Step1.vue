@@ -42,15 +42,18 @@
     <v-card-actions>
       <v-btn @click="prepareProducts">Add Products</v-btn>
     </v-card-actions>
+    <MenuTable />
   </v-card>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 
+import MenuTable from "@/components/MenuTable.vue";
+
 export default {
   name: "Products",
-  components: {},
+  components: { MenuTable },
   computed: {
     ...mapState(["categories", "productDatabase", "e1", "steps"]),
     ...mapGetters(["getCategoryByName"]),
