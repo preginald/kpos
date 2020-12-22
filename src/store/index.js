@@ -98,6 +98,7 @@ export default new Vuex.Store({
       },
     ],
     prefixesByCategory: [],
+    suffixesByCategory: [],
     products: [],
     asIsMenu: [],
     selectedCategory: '',
@@ -133,6 +134,9 @@ export default new Vuex.Store({
     setPrefixes(state, prefixes) {
       state.prefixesByCategory = prefixes;
     },
+    setSuffixes(state, suffixes) {
+      state.suffixesByCategory = suffixes;
+    },
   },
   actions: {
     saveProductToMenu({ commit }, product) {
@@ -150,8 +154,8 @@ export default new Vuex.Store({
     changeCategory({ commit, getters }, category) {
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
-      let prefixes = getters.getPrefixesByCategory;
-      commit('setPrefixes', prefixes);
+      commit('setPrefixes', getters.getPrefixesByCategory);
+      commit('setSuffixes', getters.getSuffixesByCategory);
     },
   },
   modules: {},
@@ -169,6 +173,11 @@ export default new Vuex.Store({
     getPrefixesByCategory: (state) => {
       return state.prefixes.filter(
         (prefix) => prefix.category == state.selectedCategory.name
+      );
+    },
+    getSuffixesByCategory: (state) => {
+      return state.suffixes.filter(
+        (suffixes) => suffixes.category == state.selectedCategory.name
       );
     },
   },

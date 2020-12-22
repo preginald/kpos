@@ -64,6 +64,20 @@
         ></v-checkbox>
       </v-col>
     </v-card-actions>
+    <v-card-actions>
+      <v-col
+        v-for="suffix in suffixesByCategory"
+        :key="suffix.name"
+        cols="12"
+        sm="2"
+      >
+        <v-checkbox
+          :label="suffix.name"
+          v-model="selectedSuffixes"
+          :value="suffix.name"
+        ></v-checkbox>
+      </v-col>
+    </v-card-actions>
 
     <MenuTable />
   </v-card>
@@ -85,6 +99,7 @@ export default {
       "e1",
       "steps",
       "prefixesByCategory",
+      "suffixesByCategory",
     ]),
     selectCategory: {
       set(category) {
@@ -110,6 +125,7 @@ export default {
     },
     prefix: { name: "", value: "", category: "", price: "" },
     selectedPrefixes: [],
+    selectedSuffixes: [],
   }),
   methods: {
     ...mapMutations(["pushProducts", "pushCategory"]),
