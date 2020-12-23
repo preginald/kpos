@@ -19,7 +19,9 @@
 
           <v-btn v-on:click="toggleSuffix" :value="2" text> SUF </v-btn>
 
-          <v-btn :value="3" text> +/-</v-btn>
+          <v-btn :value="3">
+            <v-icon> mdi-contrast </v-icon>
+          </v-btn>
 
           <v-btn :value="4" text> INC </v-btn>
         </v-btn-toggle>
@@ -92,6 +94,31 @@
       </v-col>
     </v-card-actions>
     <v-card-actions>
+      <v-col v-if="selectedCategory.add">
+        <v-text-field
+          number
+          label="Price add"
+          v-model="price.add"
+        ></v-text-field>
+      </v-col>
+      <v-col v-if="selectedCategory.minus">
+        <v-text-field
+          number
+          label="Price minus"
+          v-model="price.minus"
+        ></v-text-field>
+      </v-col>
+    </v-card-actions>
+    <v-card-actions v-if="selectedCategory.sizes">
+      <v-col v-for="size in selectedCategory.sizes" :key="size.name">
+        <v-text-field
+          number
+          :label="size.name"
+          v-model="sizes[size.name]"
+        ></v-text-field>
+      </v-col>
+    </v-card-actions>
+    <v-card-actions>
       <v-col
         v-for="suffix in suffixesByCategory"
         :key="suffix.name"
@@ -106,7 +133,7 @@
       </v-col>
     </v-card-actions>
     <v-card-actions>
-      <v-btn @click="addProducts">Add Products</v-btn>
+      <v-btn @click="addProducts">Apply Permutations</v-btn>
       <v-btn @click="deleteXmenu"
         >Delete
 
@@ -163,15 +190,20 @@ export default {
     },
     prefix: { name: "", value: "", category: "", price: "" },
     suffix: { name: "", value: "", category: "", price: "" },
+    price: { add: 0, minus: 0 },
     selectedPrefixes: [],
     selectedSuffixes: [],
+    sizes: [{ price: 0 }],
   }),
   methods: {
-    ...mapMutations(["pushProducts", "pushCategory", "pushProductsToXmenu"]),
+    ...mapMutations(["pushProducts", "pushCategory"]),
     ...mapActions([
       "changeCategory",
+      "savePrefix",
+      "saveSuffix",
       "saveProductToMenu",
       "saveProductsToMenu",
+      "saveProductsToXmenu",
       "deleteXmenu",
     ]),
     togglePrefix() {
@@ -187,7 +219,7 @@ export default {
         category: this.selectedCategory.name,
         price: this.prefix.price,
       };
-      this.prefixesByCategory.push(prefix);
+      this.savePrefix(prefix);
       this.prefix = { name: "", value: "" };
     },
     addSuffix() {
@@ -197,7 +229,7 @@ export default {
         category: this.selectedCategory.name,
         price: this.suffix.price,
       };
-      this.suffixesByCategory.push(suffix);
+      this.saveSuffix(suffix);
       this.suffix = { name: "", value: "" };
     },
     setActiveCategory() {
@@ -237,14 +269,32 @@ export default {
       return parseFloat(price).toFixed(2);
     },
     addProducts() {
-      console.log(this.selectedMenuRows);
+      console.log(this.sizes);
       let productsArray = [];
       this.selectedMenuRows.forEach((product) => {
-        if (product.price) {
+        if (
+          product.price &&
+          (this.selectedCategory.add != true ||
+            this.selectCategory.minus != true)
+        ) {
           productsArray.push({
             name: product.name,
             category: product.category,
             price: product.price,
+          });
+        }
+        if (this.selectedCategory.add) {
+          productsArray.push({
+            name: "Add " + product.name,
+            category: product.category,
+            price: this.priceToFixed(this.price.add),
+          });
+        }
+        if (this.selectedCategory.minus) {
+          productsArray.push({
+            name: "No " + product.name,
+            category: product.category,
+            price: this.priceToFixed(this.price.minus),
           });
         }
       });
@@ -271,6 +321,7 @@ export default {
               name: this.getPrefixValue(prefix) + " " + product.name,
               category: product.category,
               prefix: prefix,
+              suffix: product.suffix,
               price: this.priceToFixed(
                 Number(product.price) + Number(this.getPrefixPrice(prefix))
               ),
@@ -279,9 +330,11 @@ export default {
         });
       }
 
-      productsArray.forEach((product) => {
-        this.pushProductsToXmenu(product);
-      });
+      this.saveProductsToXmenu(productsArray);
+
+      // productsArray.forEach((product) => {
+      //   this.saveProductsToXmenu(product);
+      // });
     },
 
     getPrefixValue(prefix) {
