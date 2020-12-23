@@ -70,7 +70,30 @@ export default new Vuex.Store({
     categories: [
       { name: 'Burgers', value: 'burgers', prefix: true },
       { name: 'Burger Extra', value: 'burger extra', add: true, minus: true },
-      { name: 'Fish', value: 'fish', suffix: true, prefix: true },
+      {
+        name: 'Fish',
+        value: 'fish',
+        prefixes: [
+          {
+            name: 'GF',
+            value: 'GF',
+            price: '.50',
+          },
+        ],
+        suffixes: [
+          {
+            name: 'Grill',
+            value: 'G',
+            price: '0.40',
+          },
+          {
+            name: 'Flour',
+            value: 'F',
+            price: '0',
+          },
+        ],
+        prefix: true,
+      },
       { name: 'Souvlaki', value: 'souvlaki' },
       { name: 'Gyros', value: 'gyros' },
       {
