@@ -1,7 +1,6 @@
 <template>
   <v-card>
     <v-card-title> Analyse </v-card-title>
-    <MenuTable />
     <v-card-text>
       <v-toolbar dense>
         <v-combobox
@@ -27,6 +26,7 @@
         </v-btn-toggle>
       </v-toolbar>
     </v-card-text>
+    <MenuTable />
     <v-card-text v-if="form.prefix">
       <v-row>
         <v-col>
@@ -114,7 +114,7 @@
         <v-text-field
           number
           :label="size.name"
-          v-model="sizes[size.name]"
+          v-model="size.price"
         ></v-text-field>
       </v-col>
     </v-card-actions>
@@ -193,7 +193,6 @@ export default {
     price: { add: 0, minus: 0 },
     selectedPrefixes: [],
     selectedSuffixes: [],
-    sizes: [{ price: 0 }],
   }),
   methods: {
     ...mapMutations(["pushProducts", "pushCategory"]),
@@ -269,13 +268,13 @@ export default {
       return parseFloat(price).toFixed(2);
     },
     addProducts() {
-      console.log(this.sizes);
       let productsArray = [];
       this.selectedMenuRows.forEach((product) => {
         if (
-          product.price &&
-          (this.selectedCategory.add != true ||
-            this.selectCategory.minus != true)
+          product.price != 0
+          //  &&
+          // (this.selectedCategory.add != true ||
+          //   this.selectCategory.minus != true)
         ) {
           productsArray.push({
             name: product.name,
@@ -296,6 +295,10 @@ export default {
             category: product.category,
             price: this.priceToFixed(this.price.minus),
           });
+        }
+
+        if (this.selectedCategory.sizes) {
+          productsArray = this.permutateSizes(productsArray, product);
         }
       });
 
@@ -336,6 +339,24 @@ export default {
       //   this.saveProductsToXmenu(product);
       // });
     },
+    permutateSizes(productsArray, product) {
+      this.selectedCategory.sizes.forEach((size) => {
+        let name = product.name + " " + this.getSizeValue(size.name);
+
+        if (name && size.price) {
+          productsArray.push({
+            name: name,
+            category: product.category,
+            price: this.priceToFixed(size.price),
+          });
+        }
+      });
+      return productsArray;
+    },
+    getSizeValue(size) {
+      let n = this.selectCategory.sizes.find((e) => e.name == size);
+      return n.value;
+    },
 
     getPrefixValue(prefix) {
       let n = this.prefixes.find((e) => e.name == prefix);
@@ -346,10 +367,12 @@ export default {
       let n = this.suffixes.find((e) => e.name == suffix);
       return n.value;
     },
+
     getPrefixPrice(prefix) {
       let n = this.prefixes.find((e) => e.name == prefix);
       return n.price;
     },
+
     getSuffixPrice(suffix) {
       let n = this.suffixes.find((e) => e.name == suffix);
       return n.price;

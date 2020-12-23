@@ -76,7 +76,10 @@ export default new Vuex.Store({
       {
         name: 'Salads',
         value: 'salads',
-        sizes: [{ name: 'Small' }, { name: 'large' }],
+        sizes: [
+          { name: 'Small', value: 'S' },
+          { name: 'Large', value: 'L' },
+        ],
       },
       { name: 'Chips', value: 'chips' },
       { name: 'Sweets', value: 'sweets' },
