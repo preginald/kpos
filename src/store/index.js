@@ -10,7 +10,8 @@ export default new Vuex.Store({
     steps: [
       { number: 1, name: 'Import' },
       { number: 2, name: 'Analyse' },
-      { number: 3, name: 'Export' },
+      { number: 3, name: 'Review' },
+      { number: 4, name: 'Export' },
     ],
     search: '',
     productDatabase: [
@@ -64,7 +65,7 @@ export default new Vuex.Store({
       'Bacon',
     ],
     menu: [],
-    export: [],
+    xmenu: [],
     selectedMenuRows: [],
     categories: [
       { name: 'Burgers', value: 'burgers', prefix: true },
@@ -112,8 +113,8 @@ export default new Vuex.Store({
     pushProductsToMenu(state, products) {
       state.menu.push(products);
     },
-    pushProductsToExport(state, products) {
-      state.export.push(products);
+    pushProductsToXmenu(state, products) {
+      state.xmenu.push(products);
     },
     pushProducts(state, payload) {
       state.products.push(payload);
