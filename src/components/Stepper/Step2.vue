@@ -258,6 +258,21 @@ export default {
         });
       }
 
+      if (this.selectedPrefixes.length) {
+        productsArray.forEach((product) => {
+          this.selectedPrefixes.forEach((prefix) => {
+            productsArray.push({
+              name: this.getPrefixValue(prefix) + " " + product.name,
+              category: product.category,
+              prefix: prefix,
+              price: this.priceToFixed(
+                Number(product.price) + Number(this.getPrefixPrice(prefix))
+              ),
+            });
+          });
+        });
+      }
+
       productsArray.forEach((product) => {
         this.pushProductsToXmenu(product);
       });
