@@ -73,7 +73,11 @@ export default new Vuex.Store({
       { name: 'Fish', value: 'fish', suffix: true, prefix: true },
       { name: 'Souvlaki', value: 'souvlaki' },
       { name: 'Gyros', value: 'gyros' },
-      { name: 'Salads', value: 'salads' },
+      {
+        name: 'Salads',
+        value: 'salads',
+        sizes: [{ name: 'Small' }, { name: 'large' }],
+      },
       { name: 'Chips', value: 'chips' },
       { name: 'Sweets', value: 'sweets' },
       { name: 'Ice Cream', value: 'ice cream' },
@@ -113,6 +117,9 @@ export default new Vuex.Store({
     pushProductsToMenu(state, products) {
       state.menu.push(products);
     },
+    pushProductToXmenu(state, product) {
+      state.xmenu.push(product);
+    },
     pushProductsToXmenu(state, products) {
       state.xmenu.push(products);
     },
@@ -146,6 +153,12 @@ export default new Vuex.Store({
     setSuffixes(state, suffixes) {
       state.suffixesByCategory = suffixes;
     },
+    pushPrefix(state, prefix) {
+      state.prefixes.push(prefix);
+    },
+    pushSuffix(state, suffix) {
+      state.suffixes.push(suffix);
+    },
     setXmenu(state, xMenu) {
       state.xmenu = xMenu;
     },
@@ -163,10 +176,29 @@ export default new Vuex.Store({
         }
       });
     },
+    saveProductsToXmenu({ commit, getters }, products) {
+      products.forEach((product) => {
+        if (
+          typeof getters.getXmenuProductByNameCategory(product) === 'undefined'
+        ) {
+          commit('pushProductToXmenu', product);
+        }
+      });
+    },
     saveProductsToExport({ getters }, products) {
       products.forEach((product) => {
         console.log(getters.getIndexOfExportProductByNameCategory(product));
       });
+    },
+    savePrefix({ commit, getters }, prefix) {
+      commit('pushPrefix', prefix);
+      commit('setPrefixes', getters.getPrefixesByCategory);
+      commit('setSuffixes', getters.getSuffixesByCategory);
+    },
+    saveSuffix({ commit, getters }, suffix) {
+      commit('pushSuffix', suffix);
+      commit('setPrefixes', getters.getPrefixesByCategory);
+      commit('setSuffixes', getters.getSuffixesByCategory);
     },
     changeCategory({ commit, getters }, category) {
       commit('setSelectedCategory', category);
@@ -188,6 +220,13 @@ export default new Vuex.Store({
         (menuProduct) =>
           menuProduct.name === product.name &&
           menuProduct.category === product.category
+      );
+    },
+    getXmenuProductByNameCategory: (state) => (product) => {
+      return state.xmenu.find(
+        (xmenuProduct) =>
+          xmenuProduct.name === product.name &&
+          xmenuProduct.category === product.category
       );
     },
     getExportProductByNameCategory: (state) => (product) => {
