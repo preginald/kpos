@@ -20,9 +20,6 @@
       class="elevation-1"
     >
     </v-data-table>
-    <v-card-actions>
-      <v-btn @click="process">Go!</v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -42,10 +39,6 @@ export default {
     ],
   }),
   computed: mapState(["menu", "xmenu"]),
-  methods: {
-    process() {
-      console.log(this.selected);
-    },
-  },
+  methods: {},
 };
 </script>
