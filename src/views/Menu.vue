@@ -6,14 +6,40 @@
         <Stepper />
         <v-card class="mt-2">
           <v-card-actions v-if="stepper == 1">
-            <v-btn @click="setStepper(2)">Analyse</v-btn>
+            <v-btn @click="setStepper(2)"
+              >{{ steps[1].name }}
+              <v-icon right> mdi-arrow-right </v-icon>
+            </v-btn>
           </v-card-actions>
           <v-card-actions v-if="stepper == 2">
-            <v-btn @click="setStepper(1)">Back</v-btn>
-            <v-btn @click="setStepper(3)">Export</v-btn>
+            <v-btn @click="setStepper(1)"
+              >{{ steps[0].name }}
+
+              <v-icon right> mdi-arrow-left </v-icon>
+            </v-btn>
+            <v-btn @click="setStepper(3)"
+              >{{ steps[2].name }}
+              <v-icon right> mdi-arrow-right </v-icon>
+            </v-btn>
           </v-card-actions>
           <v-card-actions v-if="stepper == 3">
-            <v-btn @click="setStepper(2)">Back</v-btn>
+            <v-btn @click="setStepper(2)"
+              >{{ steps[1].name }}
+
+              <v-icon right> mdi-arrow-left </v-icon>
+            </v-btn>
+            <v-btn @click="setStepper(4)"
+              >{{ steps[3].name }}
+
+              <v-icon right> mdi-arrow-right </v-icon>
+            </v-btn>
+          </v-card-actions>
+          <v-card-actions v-if="stepper == 4">
+            <v-btn @click="setStepper(3)"
+              >{{ steps[2].name }}
+
+              <v-icon right> mdi-arrow-left </v-icon>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -34,7 +60,7 @@ export default {
     Stepper,
   },
   computed: {
-    ...mapState(["stepper"]),
+    ...mapState(["steps", "stepper"]),
   },
   data: () => ({
     activeProductCategory: {},
