@@ -10,18 +10,18 @@
         :items="categories"
       ></v-combobox>
     </v-card-text>
-    <MenuTable />
+    <XmenuTable />
   </v-card>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 
-import MenuTable from "@/components/MenuTable.vue";
+import XmenuTable from "@/components/XmenuTable.vue";
 
 export default {
   name: "Products",
-  components: { MenuTable },
+  components: { XmenuTable },
   computed: {
     ...mapState([
       "selectedCategory",
@@ -46,10 +46,8 @@ export default {
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
-    // selectedCategory: "",
   }),
   methods: {
-    // ...mapMutations(["pushProducts", "pushProductToMenu", "pushCategory"]),
     ...mapMutations([
       "pushProducts",
       "pushCategory",
