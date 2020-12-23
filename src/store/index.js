@@ -146,6 +146,9 @@ export default new Vuex.Store({
     setSuffixes(state, suffixes) {
       state.suffixesByCategory = suffixes;
     },
+    setXmenu(state, xMenu) {
+      state.xmenu = xMenu;
+    },
   },
   actions: {
     saveProductToMenu({ commit }, product) {
@@ -170,6 +173,9 @@ export default new Vuex.Store({
       commit('setSearchByCategory', category);
       commit('setPrefixes', getters.getPrefixesByCategory);
       commit('setSuffixes', getters.getSuffixesByCategory);
+    },
+    deleteXmenu({ commit }) {
+      commit('setXmenu', []);
     },
   },
   modules: {},

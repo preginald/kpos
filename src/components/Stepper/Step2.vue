@@ -107,6 +107,11 @@
     </v-card-actions>
     <v-card-actions>
       <v-btn @click="addProducts">Add Products</v-btn>
+      <v-btn @click="deleteXmenu"
+        >Delete
+
+        <v-icon right> mdi-trash-can-outline </v-icon>
+      </v-btn>
     </v-card-actions>
     <XmenuTable class="mt-3" />
   </v-card>
@@ -167,6 +172,7 @@ export default {
       "changeCategory",
       "saveProductToMenu",
       "saveProductsToMenu",
+      "deleteXmenu",
     ]),
     togglePrefix() {
       this.form.prefix = !this.form.prefix;
