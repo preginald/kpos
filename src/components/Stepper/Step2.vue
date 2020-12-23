@@ -131,6 +131,8 @@ export default {
       "steps",
       "prefixesByCategory",
       "suffixesByCategory",
+      "prefixes",
+      "suffixes",
     ]),
     selectCategory: {
       set(category) {
@@ -241,9 +243,42 @@ export default {
         }
       });
 
+      if (this.selectedSuffixes.length) {
+        productsArray.forEach((product) => {
+          this.selectedSuffixes.forEach((suffix) => {
+            productsArray.push({
+              name: product.name + " " + this.getSuffixValue(suffix),
+              category: product.category,
+              suffix: suffix,
+              price: this.priceToFixed(
+                Number(product.price) + Number(this.getSuffixPrice(suffix))
+              ),
+            });
+          });
+        });
+      }
+
       productsArray.forEach((product) => {
         this.pushProductsToXmenu(product);
       });
+    },
+
+    getPrefixValue(prefix) {
+      let n = this.prefixes.find((e) => e.name == prefix);
+      return n.value;
+    },
+
+    getSuffixValue(suffix) {
+      let n = this.suffixes.find((e) => e.name == suffix);
+      return n.value;
+    },
+    getPrefixPrice(prefix) {
+      let n = this.prefixes.find((e) => e.name == prefix);
+      return n.price;
+    },
+    getSuffixPrice(suffix) {
+      let n = this.suffixes.find((e) => e.name == suffix);
+      return n.price;
     },
   },
 };
