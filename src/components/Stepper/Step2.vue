@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title> Analyse </v-card-title>
+    <MenuTable />
     <v-card-text>
       <v-toolbar dense>
         <v-combobox
@@ -14,13 +15,13 @@
         <v-spacer></v-spacer>
 
         <v-btn-toggle v-model="toggle_multiple" dense group>
-          <v-btn v-on:click="togglePrefix" :value="1" text> PREFIX </v-btn>
+          <v-btn v-on:click="togglePrefix" :value="1" text> PRE </v-btn>
 
-          <v-btn v-on:click="toggleSuffix" :value="2" text> SUFFIX </v-btn>
+          <v-btn v-on:click="toggleSuffix" :value="2" text> SUF </v-btn>
 
-          <v-btn :value="3" text> INCREMENT </v-btn>
+          <v-btn :value="3" text> +/-</v-btn>
 
-          <v-btn :value="4" text> ZULU </v-btn>
+          <v-btn :value="4" text> INC </v-btn>
         </v-btn-toggle>
       </v-toolbar>
     </v-card-text>
@@ -107,8 +108,7 @@
     <v-card-actions>
       <v-btn @click="addProducts">Add Products</v-btn>
     </v-card-actions>
-
-    <MenuTable />
+    <XmenuTable class="mt-3" />
   </v-card>
 </template>
 
@@ -116,10 +116,11 @@
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 
 import MenuTable from "@/components/MenuTable.vue";
+import XmenuTable from "@/components/XmenuTable.vue";
 
 export default {
   name: "Products",
-  components: { MenuTable },
+  components: { MenuTable, XmenuTable },
   computed: {
     ...mapState([
       "selectedCategory",
@@ -159,7 +160,7 @@ export default {
     selectedSuffixes: [],
   }),
   methods: {
-    ...mapMutations(["pushProducts", "pushCategory", "pushProductsToExport"]),
+    ...mapMutations(["pushProducts", "pushCategory", "pushProductsToXmenu"]),
     ...mapActions([
       "changeCategory",
       "saveProductToMenu",
@@ -241,7 +242,7 @@ export default {
       });
 
       productsArray.forEach((product) => {
-        this.pushProductsToExport(product);
+        this.pushProductsToXmenu(product);
       });
     },
   },
