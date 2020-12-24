@@ -15,8 +15,6 @@
             <v-btn @click="setStepper(1)">
               <v-icon left> mdi-arrow-left </v-icon>
               {{ steps[0].name }}
-
-              <v-icon left> mdi-arrow-left </v-icon>
             </v-btn>
             <v-divider></v-divider>
             <v-btn @click="setStepper(3)"
