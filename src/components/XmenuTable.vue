@@ -29,7 +29,6 @@ import { mapState } from "vuex";
 export default {
   data: () => ({
     selected: [],
-    search: "",
     headers: [
       { text: "Product", value: "name" },
       { text: "Prefix", value: "prefix" },
@@ -38,7 +37,7 @@ export default {
       { text: "Price", value: "price", align: "end" },
     ],
   }),
-  computed: mapState(["menu", "xmenu"]),
+  computed: mapState(["menu", "search", "xmenu"]),
   methods: {},
 };
 </script>
