@@ -228,9 +228,11 @@ export default new Vuex.Store({
         commit('setPrefix', prefix);
       }
     },
-    saveSuffix({ commit }, suffix) {
+    saveSuffix({ commit, getters }, suffix) {
       suffix.price = parseFloat(suffix.price).toFixed(2);
-      commit('setSuffix', suffix);
+      if (typeof getters.getCategorySuffixByName(suffix) === 'undefined') {
+        commit('setSuffix', suffix);
+      }
     },
     changeCategory({ commit }, category) {
       commit('setSelectedCategory', category);
@@ -261,6 +263,16 @@ export default new Vuex.Store({
     getCategoryPrefixByValue: (state) => (prefix) => {
       return state.selectedCategory.prefixes.find(
         (categoryPrefix) => categoryPrefix.value === prefix.value
+      );
+    },
+    getCategorySuffixByName: (state) => (suffix) => {
+      return state.selectedCategory.suffixes.find(
+        (categorySuffix) => categorySuffix.name === suffix.name
+      );
+    },
+    getCategorySuffixByValue: (state) => (suffix) => {
+      return state.selectedCategory.prefixes.find(
+        (categorySuffix) => categorySuffix.value === suffix.value
       );
     },
     getMenuProductByNameCategory: (state) => (product) => {
