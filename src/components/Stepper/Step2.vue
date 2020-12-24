@@ -85,6 +85,7 @@
           number
           label="Price add"
           v-model="price.add"
+          :hint="price.value"
         ></v-text-field>
       </v-col>
       <v-col v-if="selectedCategory.minus">
@@ -92,6 +93,7 @@
           number
           label="Price minus"
           v-model="price.minus"
+          :hint="price.value"
         ></v-text-field>
       </v-col>
     </v-card-actions>
@@ -101,6 +103,7 @@
           number
           :label="size.name"
           v-model="size.price"
+          :hint="size.value"
         ></v-text-field>
       </v-col>
     </v-card-actions>
@@ -115,6 +118,7 @@
           number
           :label="prefix.name"
           v-model="prefix.price"
+          :hint="prefix.value"
         ></v-text-field>
       </v-col>
     </v-card-actions>
@@ -129,6 +133,7 @@
           number
           :label="suffix.name"
           v-model="suffix.price"
+          :hint="suffix.value"
         ></v-text-field>
       </v-col>
     </v-card-actions>
