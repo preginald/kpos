@@ -80,20 +80,6 @@
       </v-row>
     </v-card-text>
     <v-card-actions>
-      <v-col
-        v-for="prefix in prefixesByCategory"
-        :key="prefix.name"
-        cols="12"
-        sm="2"
-      >
-        <v-checkbox
-          :label="prefix.name"
-          v-model="selectedPrefixes"
-          :value="prefix.name"
-        ></v-checkbox>
-      </v-col>
-    </v-card-actions>
-    <v-card-actions>
       <v-col v-if="selectedCategory.add">
         <v-text-field
           number
@@ -115,6 +101,20 @@
           number
           :label="size.name"
           v-model="size.price"
+        ></v-text-field>
+      </v-col>
+    </v-card-actions>
+    <v-card-actions v-if="selectedCategory.prefixes">
+      <v-col
+        v-for="prefix in selectedCategory.prefixes"
+        :key="prefix.name"
+        cols="12"
+        sm="2"
+      >
+        <v-text-field
+          number
+          :label="prefix.name"
+          v-model="prefix.price"
         ></v-text-field>
       </v-col>
     </v-card-actions>
@@ -161,9 +161,7 @@ export default {
       "productDatabase",
       "e1",
       "steps",
-      "prefixesByCategory",
       "suffixesByCategory",
-      "prefixes",
       "suffixes",
     ]),
     selectCategory: {
@@ -191,7 +189,6 @@ export default {
     prefix: { name: "", value: "", category: "", price: "" },
     suffix: { name: "", value: "", category: "", price: "" },
     price: { add: 0, minus: 0 },
-    selectedPrefixes: [],
     selectedSuffixes: [],
   }),
   methods: {
@@ -302,35 +299,23 @@ export default {
         }
       });
 
-      if (this.selectedSuffixes.length) {
-        productsArray.forEach((product) => {
-          this.selectedSuffixes.forEach((suffix) => {
-            productsArray.push({
-              name: product.name + " " + this.getSuffixValue(suffix),
-              category: product.category,
-              suffix: suffix,
-              price: this.priceToFixed(
-                Number(product.price) + Number(this.getSuffixPrice(suffix))
-              ),
-            });
-          });
-        });
-      }
+      // if (this.selectedSuffixes.length) {
+      //   productsArray.forEach((product) => {
+      //     this.selectedSuffixes.forEach((suffix) => {
+      //       productsArray.push({
+      //         name: product.name + " " + this.getSuffixValue(suffix),
+      //         category: product.category,
+      //         suffix: suffix,
+      //         price: this.priceToFixed(
+      //           Number(product.price) + Number(this.getSuffixPrice(suffix))
+      //         ),
+      //       });
+      //     });
+      //   });
+      // }
 
-      if (this.selectedPrefixes.length) {
-        productsArray.forEach((product) => {
-          this.selectedPrefixes.forEach((prefix) => {
-            productsArray.push({
-              name: this.getPrefixValue(prefix) + " " + product.name,
-              category: product.category,
-              prefix: prefix,
-              suffix: product.suffix,
-              price: this.priceToFixed(
-                Number(product.price) + Number(this.getPrefixPrice(prefix))
-              ),
-            });
-          });
-        });
+      if (this.selectedCategory.prefixes) {
+        productsArray = this.permutatePrefixes(productsArray);
       }
 
       this.saveProductsToXmenu(productsArray);
@@ -339,17 +324,54 @@ export default {
       //   this.saveProductsToXmenu(product);
       // });
     },
+
     permutateSizes(productsArray, product) {
       this.selectedCategory.sizes.forEach((size) => {
+        size.price = this.priceToFixed(size.price);
         let name = product.name + " " + this.getSizeValue(size.name);
 
         if (name && size.price) {
           productsArray.push({
             name: name,
             category: product.category,
-            price: this.priceToFixed(size.price),
+            price: size.price,
           });
         }
+      });
+      return productsArray;
+    },
+
+    permutatePrefixes(productsArray) {
+      productsArray.forEach((product) => {
+        this.selectedCategory.prefixes.forEach((prefix) => {
+          productsArray.push({
+            name: prefix.value + " " + product.name,
+            category: product.category,
+            modifier: prefix.name,
+            prefix: prefix.name,
+            suffix: product.suffix,
+            price: this.priceToFixed(
+              Number(product.price) + Number(prefix.price)
+            ),
+          });
+        });
+      });
+      return productsArray;
+    },
+
+    permutateSuffixes(productsArray) {
+      productsArray.forEach((product) => {
+        this.selectedCategory.suffixes.forEach((suffix) => {
+          productsArray.push({
+            // name: product.name + " " + getSuffixValue(suffix),
+            name: product.name + " " + suffix.value,
+            category: product.category,
+            suffix: suffix.name,
+            price: this.priceToFixed(
+              Number(product.price) + Number(suffix.price)
+            ),
+          });
+        });
       });
       return productsArray;
     },
@@ -358,19 +380,9 @@ export default {
       return n.value;
     },
 
-    getPrefixValue(prefix) {
-      let n = this.prefixes.find((e) => e.name == prefix);
-      return n.value;
-    },
-
     getSuffixValue(suffix) {
       let n = this.suffixes.find((e) => e.name == suffix);
       return n.value;
-    },
-
-    getPrefixPrice(prefix) {
-      let n = this.prefixes.find((e) => e.name == prefix);
-      return n.price;
     },
 
     getSuffixPrice(suffix) {

@@ -229,7 +229,7 @@ export default new Vuex.Store({
     changeCategory({ commit, getters }, category) {
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
-      commit('setPrefixes', getters.getPrefixesByCategory);
+      // commit('setPrefixes', getters.getPrefixesByCategory);
       commit('setSuffixes', getters.getSuffixesByCategory);
     },
     deleteXmenu({ commit }) {
