@@ -108,30 +108,6 @@ export default new Vuex.Store({
       { name: 'Sweets', value: 'sweets' },
       { name: 'Ice Cream', value: 'ice cream' },
     ],
-    prefixes: [
-      {
-        name: 'GF',
-        value: 'GF',
-        category: 'Fish',
-        price: '.50',
-      },
-    ],
-    suffixes: [
-      {
-        name: 'Grill',
-        value: 'G',
-        category: 'Fish',
-        price: '0.40',
-      },
-      {
-        name: 'Flour',
-        value: 'F',
-        category: 'Fish',
-        price: '0',
-      },
-    ],
-    prefixesByCategory: [],
-    suffixesByCategory: [],
     products: [],
     asIsMenu: [],
     selectedCategory: '',
