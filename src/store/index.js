@@ -172,6 +172,9 @@ export default new Vuex.Store({
     setSuffix(state, suffix) {
       state.selectedCategory.suffixes.push(suffix);
     },
+    setSize(state, size) {
+      state.selectedCategory.sizes.push(size);
+    },
     setXmenu(state, xMenu) {
       state.xmenu = xMenu;
     },
@@ -215,6 +218,12 @@ export default new Vuex.Store({
         commit('setSuffix', suffix);
       }
     },
+    saveSize({ commit, getters }, size) {
+      size.price = parseFloat(size.price).toFixed(2);
+      if (typeof getters.getCategorySizeByName(size) === 'undefined') {
+        commit('setSize', size);
+      }
+    },
     changeCategory({ commit }, category) {
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
@@ -249,6 +258,11 @@ export default new Vuex.Store({
     getCategorySuffixByName: (state) => (suffix) => {
       return state.selectedCategory.suffixes.find(
         (categorySuffix) => categorySuffix.name === suffix.name
+      );
+    },
+    getCategorySizeByName: (state) => (size) => {
+      return state.selectedCategory.sizes.find(
+        (categorySize) => categorySize.name === size.name
       );
     },
     getCategorySuffixByValue: (state) => (suffix) => {

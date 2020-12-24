@@ -95,7 +95,7 @@
           ></v-text-field>
         </v-col>
         <v-col>
-          <v-btn @click="addSuffix">Add Size</v-btn>
+          <v-btn @click="saveSize(size)">Add Size</v-btn>
         </v-col>
       </v-row>
     </v-card-text>
@@ -111,7 +111,7 @@
       <v-col v-if="selectedCategory.minus">
         <v-text-field
           number
-          label="Price minus"
+          label="Minus"
           v-model="price.minus"
           :hint="price.value"
         ></v-text-field>
@@ -221,6 +221,7 @@ export default {
       "changeCategory",
       "savePrefix",
       "saveSuffix",
+      "saveSize",
       "saveProductToMenu",
       "saveProductsToMenu",
       "saveProductsToXmenu",
