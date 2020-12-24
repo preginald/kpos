@@ -69,7 +69,12 @@ export default new Vuex.Store({
     selectedMenuRows: [],
     categories: [
       { name: 'Burgers', value: 'burgers', prefix: true },
-      { name: 'Burger Extra', value: 'burger extra', add: true, minus: true },
+      {
+        name: 'Burger Extra',
+        value: 'burger extra',
+        add: { name: 'Add', value: 'Add', price: 0 },
+        minus: { name: 'Minus', value: 'No', price: 0 },
+      },
       {
         name: 'Fish',
         value: 'fish',

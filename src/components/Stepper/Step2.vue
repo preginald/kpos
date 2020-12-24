@@ -83,9 +83,9 @@
       <v-col v-if="selectedCategory.add">
         <v-text-field
           number
-          label="Price add"
-          v-model="price.add"
-          :hint="price.value"
+          :label="selectedCategory.add.name"
+          v-model="selectedCategory.add.price"
+          :hint="selectedCategory.add.value"
         ></v-text-field>
       </v-col>
       <v-col v-if="selectedCategory.minus">
@@ -267,12 +267,7 @@ export default {
     addProducts() {
       let productsArray = [];
       this.selectedMenuRows.forEach((product) => {
-        if (
-          product.price != 0
-          //  &&
-          // (this.selectedCategory.add != true ||
-          //   this.selectCategory.minus != true)
-        ) {
+        if (product.price != 0) {
           productsArray.push({
             name: product.name,
             category: product.category,
@@ -280,39 +275,16 @@ export default {
           });
         }
         if (this.selectedCategory.add) {
-          productsArray.push({
-            name: "Add " + product.name,
-            category: product.category,
-            price: this.priceToFixed(this.price.add),
-          });
+          productsArray = this.permutateAdd(productsArray, product);
         }
         if (this.selectedCategory.minus) {
-          productsArray.push({
-            name: "No " + product.name,
-            category: product.category,
-            price: this.priceToFixed(this.price.minus),
-          });
+          productsArray = this.permutateMinus(productsArray, product);
         }
 
         if (this.selectedCategory.sizes) {
           productsArray = this.permutateSizes(productsArray, product);
         }
       });
-
-      // if (this.selectedSuffixes.length) {
-      //   productsArray.forEach((product) => {
-      //     this.selectedSuffixes.forEach((suffix) => {
-      //       productsArray.push({
-      //         name: product.name + " " + this.getSuffixValue(suffix),
-      //         category: product.category,
-      //         suffix: suffix,
-      //         price: this.priceToFixed(
-      //           Number(product.price) + Number(this.getSuffixPrice(suffix))
-      //         ),
-      //       });
-      //     });
-      //   });
-      // }
 
       if (this.selectedCategory.suffixes) {
         productsArray = this.permutateSuffixes(productsArray);
@@ -323,10 +295,28 @@ export default {
       }
 
       this.saveProductsToXmenu(productsArray);
+    },
 
-      // productsArray.forEach((product) => {
-      //   this.saveProductsToXmenu(product);
-      // });
+    permutateAdd(productsArray, product) {
+      let price = this.priceToFixed(this.selectedCategory.add.price);
+      let name = this.selectedCategory.add.value + " " + product.name;
+      productsArray.push({
+        name: name,
+        category: product.category,
+        price: price,
+      });
+      return productsArray;
+    },
+
+    permutateMinus(productsArray, product) {
+      let price = this.priceToFixed(this.selectedCategory.minus.price);
+      let name = this.selectedCategory.minus.value + " " + product.name;
+      productsArray.push({
+        name: name,
+        category: product.category,
+        price: price,
+      });
+      return productsArray;
     },
 
     permutateSizes(productsArray, product) {

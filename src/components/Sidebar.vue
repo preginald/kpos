@@ -7,18 +7,18 @@
           <v-chip small label class="ma-2">{{ category.name }}</v-chip>
         </div>
       </v-card-text>
-      <div v-if="prefixes.length">
+      <div v-if="selectedCategory.prefixes">
         <v-card-title>Prefixes</v-card-title>
         <v-card-text>
-          <div v-for="prefix in prefixes" :key="prefix.name">
+          <div v-for="prefix in selectedCategory.prefixes" :key="prefix.name">
             <v-chip small label class="ma-2">{{ prefix.name }}</v-chip>
           </div>
         </v-card-text>
       </div>
-      <div v-if="suffixes.length">
+      <div v-if="selectedCategory.suffixes">
         <v-card-title>Suffixes</v-card-title>
         <v-card-text>
-          <div v-for="suffix in suffixes" :key="suffix.name">
+          <div v-for="suffix in selectedCategory.suffixes" :key="suffix.name">
             <v-chip small label class="ma-2">{{ suffix.name }}</v-chip>
           </div>
         </v-card-text>
@@ -32,6 +32,11 @@ import { mapState } from "vuex";
 
 export default {
   data: () => ({}),
-  computed: mapState(["categories", "prefixes", "suffixes"]),
+  computed: mapState([
+    "categories",
+    "selectedCategory",
+    "prefixes",
+    "suffixes",
+  ]),
 };
 </script>
