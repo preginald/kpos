@@ -222,9 +222,11 @@ export default new Vuex.Store({
         console.log(getters.getIndexOfExportProductByNameCategory(product));
       });
     },
-    savePrefix({ commit }, prefix) {
+    savePrefix({ commit, getters }, prefix) {
       prefix.price = parseFloat(prefix.price).toFixed(2);
-      commit('setPrefix', prefix);
+      if (typeof getters.getCategoryPrefixByName(prefix) === 'undefined') {
+        commit('setPrefix', prefix);
+      }
     },
     saveSuffix({ commit }, suffix) {
       suffix.price = parseFloat(suffix.price).toFixed(2);
@@ -233,8 +235,6 @@ export default new Vuex.Store({
     changeCategory({ commit }, category) {
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
-      // commit('setPrefixes', getters.getPrefixesByCategory);
-      // commit('setSuffixes', getters.getSuffixesByCategory);
     },
     deleteXmenu({ commit }) {
       commit('setXmenu', []);
@@ -253,6 +253,16 @@ export default new Vuex.Store({
         (prefix) => prefix.name == name
       );
     },
+    getCategoryPrefixByName: (state) => (prefix) => {
+      return state.selectedCategory.prefixes.find(
+        (categoryPrefix) => categoryPrefix.name === prefix.name
+      );
+    },
+    getCategoryPrefixByValue: (state) => (prefix) => {
+      return state.selectedCategory.prefixes.find(
+        (categoryPrefix) => categoryPrefix.value === prefix.value
+      );
+    },
     getMenuProductByNameCategory: (state) => (product) => {
       return state.menu.find(
         (menuProduct) =>
@@ -269,13 +279,6 @@ export default new Vuex.Store({
     },
     getExportProductByNameCategory: (state) => (product) => {
       return state.export.find(
-        (exportProduct) =>
-          exportProduct.name === product.name &&
-          exportProduct.category === product.category
-      );
-    },
-    getIndexOfExportProductByNameCategory: (state) => (product) => {
-      return state.export.findIndex(
         (exportProduct) =>
           exportProduct.name === product.name &&
           exportProduct.category === product.category
