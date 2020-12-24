@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-card-title> Import </v-card-title>
     <v-card-text>
       <v-combobox
         v-on:keyup.enter="setActiveCategory"
