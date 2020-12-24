@@ -111,9 +111,9 @@
       <v-col v-if="selectedCategory.minus">
         <v-text-field
           number
-          label="Minus"
-          v-model="price.minus"
-          :hint="price.value"
+          :label="selectedCategory.minus.name"
+          v-model="selectedCategory.minus.price"
+          :hint="selectedCategory.minus.value"
         ></v-text-field>
       </v-col>
     </v-card-actions>
