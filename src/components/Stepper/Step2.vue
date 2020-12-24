@@ -13,21 +13,21 @@
         ></v-combobox>
         <v-spacer></v-spacer>
 
-        <v-btn-toggle v-model="toggle_multiple" dense group>
-          <v-btn v-on:click="togglePrefix" :value="1" text> PRE </v-btn>
+        <v-btn-toggle v-model="toggle_exclusive" dense group>
+          <v-btn v-on:click="showForm('prefix')" :value="1" text> PRE </v-btn>
+          <v-btn v-on:click="showForm('suffix')" :value="2" text> SUF </v-btn>
+          <v-btn v-on:click="showForm('size')" :value="3" text> SIZE </v-btn>
 
-          <v-btn v-on:click="toggleSuffix" :value="2" text> SUF </v-btn>
-
-          <v-btn :value="3">
+          <v-btn :value="4">
             <v-icon> mdi-contrast </v-icon>
           </v-btn>
 
-          <v-btn :value="4" text> INC </v-btn>
+          <v-btn :value="5" text> INC </v-btn>
         </v-btn-toggle>
       </v-toolbar>
     </v-card-text>
     <MenuTable />
-    <v-card-text v-if="form.prefix">
+    <v-card-text v-if="form == 'prefix'">
       <v-row>
         <v-col>
           <v-text-field
@@ -53,7 +53,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-text v-if="form.suffix">
+    <v-card-text v-if="form == 'suffix'">
       <v-row>
         <v-col>
           <v-text-field
@@ -76,6 +76,26 @@
         </v-col>
         <v-col>
           <v-btn @click="addSuffix">Add Suffix</v-btn>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-text v-if="form == 'size'">
+      <v-row>
+        <v-col>
+          <v-text-field label="Size name" v-model="size.name"></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field label="Size value" v-model="size.value"></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            number
+            label="Size price"
+            v-model="size.price"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-btn @click="addSuffix">Add Size</v-btn>
         </v-col>
       </v-row>
     </v-card-text>
@@ -182,15 +202,17 @@ export default {
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
-    toggle_multiple: [],
-    form: {
-      prefix: false,
-      suffix: false,
-      increment: false,
-      zulu: false,
-    },
-    prefix: { name: "", value: "", category: "", price: "" },
-    suffix: { name: "", value: "", category: "", price: "" },
+    toggle_exclusive: null,
+    // form: {
+    //   prefix: false,
+    //   suffix: false,
+    //   size: false,
+    //   increment: false,
+    // },
+    form: null,
+    prefix: { name: "", value: "", price: "" },
+    suffix: { name: "", value: "", price: "" },
+    size: { name: "", value: "", price: "" },
     price: { add: 0, minus: 0 },
   }),
   methods: {
@@ -204,6 +226,13 @@ export default {
       "saveProductsToXmenu",
       "deleteXmenu",
     ]),
+    showForm(form) {
+      if (this.form == form) {
+        this.form = null;
+      } else {
+        this.form = form;
+      }
+    },
     togglePrefix() {
       this.form.prefix = !this.form.prefix;
     },
