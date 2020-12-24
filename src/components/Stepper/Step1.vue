@@ -41,7 +41,7 @@
       </v-row>
     </v-card-text>
     <v-card-actions>
-      <v-btn @click="prepareProducts">Add Products</v-btn>
+      <v-btn @click="prepareProducts">Add to menu</v-btn>
     </v-card-actions>
     <MenuTable />
   </v-card>
@@ -68,19 +68,11 @@ export default {
     },
   },
   data: () => ({
-    activeProductCategory: {},
     productsToInput: 1,
-    product: [{ name: "", category: "", price: 0 }],
-    category: [{ name: "", value: "" }],
+    product: [{ name: "", price: 0 }],
   }),
   methods: {
-    // ...mapMutations(["pushProducts", "pushProductToMenu", "pushCategory"]),
-    ...mapMutations([
-      "pushProducts",
-      "pushCategory",
-      "setSearchByCategory",
-      // "setSelectedCategory",
-    ]),
+    ...mapMutations(["pushProducts", "pushCategory", "setSearchByCategory"]),
     ...mapActions([
       "changeCategory",
       "saveProductToMenu",
@@ -119,7 +111,7 @@ export default {
         }
       });
       this.saveProductsToMenu(productsArray);
-      this.product = [{ name: "", category: "", price: 0 }];
+      this.product = [{ name: "", price: 0 }];
       this.productsToInput = 1;
     },
     priceToFixed(price) {
