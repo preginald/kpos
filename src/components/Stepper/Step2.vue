@@ -118,18 +118,18 @@
         ></v-text-field>
       </v-col>
     </v-card-actions>
-    <v-card-actions>
+    <v-card-actions v-if="selectedCategory.suffixes">
       <v-col
-        v-for="suffix in suffixesByCategory"
+        v-for="suffix in selectedCategory.suffixes"
         :key="suffix.name"
         cols="12"
         sm="2"
       >
-        <v-checkbox
+        <v-text-field
+          number
           :label="suffix.name"
-          v-model="selectedSuffixes"
-          :value="suffix.name"
-        ></v-checkbox>
+          v-model="suffix.price"
+        ></v-text-field>
       </v-col>
     </v-card-actions>
     <v-card-actions>
@@ -161,8 +161,6 @@ export default {
       "productDatabase",
       "e1",
       "steps",
-      "suffixesByCategory",
-      "suffixes",
     ]),
     selectCategory: {
       set(category) {
@@ -189,7 +187,6 @@ export default {
     prefix: { name: "", value: "", category: "", price: "" },
     suffix: { name: "", value: "", category: "", price: "" },
     price: { add: 0, minus: 0 },
-    selectedSuffixes: [],
   }),
   methods: {
     ...mapMutations(["pushProducts", "pushCategory"]),
@@ -212,7 +209,6 @@ export default {
       let prefix = {
         name: this.prefix.name,
         value: this.prefix.value,
-        category: this.selectedCategory.name,
         price: this.prefix.price,
       };
       this.savePrefix(prefix);
@@ -222,7 +218,6 @@ export default {
       let suffix = {
         name: this.suffix.name,
         value: this.suffix.value,
-        category: this.selectedCategory.name,
         price: this.suffix.price,
       };
       this.saveSuffix(suffix);
@@ -314,6 +309,10 @@ export default {
       //   });
       // }
 
+      if (this.selectedCategory.suffixes) {
+        productsArray = this.permutateSuffixes(productsArray);
+      }
+
       if (this.selectedCategory.prefixes) {
         productsArray = this.permutatePrefixes(productsArray);
       }
@@ -363,9 +362,9 @@ export default {
       productsArray.forEach((product) => {
         this.selectedCategory.suffixes.forEach((suffix) => {
           productsArray.push({
-            // name: product.name + " " + getSuffixValue(suffix),
             name: product.name + " " + suffix.value,
             category: product.category,
+            modifier: suffix.name,
             suffix: suffix.name,
             price: this.priceToFixed(
               Number(product.price) + Number(suffix.price)

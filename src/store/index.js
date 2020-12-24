@@ -180,10 +180,16 @@ export default new Vuex.Store({
       state.suffixesByCategory = suffixes;
     },
     pushPrefix(state, prefix) {
-      state.prefixes.push(prefix);
+      state.categories.push(prefix);
     },
     pushSuffix(state, suffix) {
-      state.suffixes.push(suffix);
+      state.categories.push(suffix);
+    },
+    setPrefix(state, prefix) {
+      state.selectedCategory.prefixes.push(prefix);
+    },
+    setSuffix(state, suffix) {
+      state.selectedCategory.suffixes.push(suffix);
     },
     setXmenu(state, xMenu) {
       state.xmenu = xMenu;
@@ -216,21 +222,19 @@ export default new Vuex.Store({
         console.log(getters.getIndexOfExportProductByNameCategory(product));
       });
     },
-    savePrefix({ commit, getters }, prefix) {
-      commit('pushPrefix', prefix);
-      commit('setPrefixes', getters.getPrefixesByCategory);
-      commit('setSuffixes', getters.getSuffixesByCategory);
+    savePrefix({ commit }, prefix) {
+      prefix.price = parseFloat(prefix.price).toFixed(2);
+      commit('setPrefix', prefix);
     },
-    saveSuffix({ commit, getters }, suffix) {
-      commit('pushSuffix', suffix);
-      commit('setPrefixes', getters.getPrefixesByCategory);
-      commit('setSuffixes', getters.getSuffixesByCategory);
+    saveSuffix({ commit }, suffix) {
+      suffix.price = parseFloat(suffix.price).toFixed(2);
+      commit('setSuffix', suffix);
     },
-    changeCategory({ commit, getters }, category) {
+    changeCategory({ commit }, category) {
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
       // commit('setPrefixes', getters.getPrefixesByCategory);
-      commit('setSuffixes', getters.getSuffixesByCategory);
+      // commit('setSuffixes', getters.getSuffixesByCategory);
     },
     deleteXmenu({ commit }) {
       commit('setXmenu', []);
@@ -238,8 +242,16 @@ export default new Vuex.Store({
   },
   modules: {},
   getters: {
+    getCategoryIndexByName: (state) => (name) => {
+      return state.categories.findIndex((category) => category.name == name);
+    },
     getCategoryByName: (state) => (name) => {
       return state.categories.find((category) => category.name == name);
+    },
+    getCategoryPrefixIndexByName: (state) => (name) => {
+      return state.selectedCategory.prefixes.findIndex(
+        (prefix) => prefix.name == name
+      );
     },
     getMenuProductByNameCategory: (state) => (product) => {
       return state.menu.find(
@@ -267,16 +279,6 @@ export default new Vuex.Store({
         (exportProduct) =>
           exportProduct.name === product.name &&
           exportProduct.category === product.category
-      );
-    },
-    getPrefixesByCategory: (state) => {
-      return state.prefixes.filter(
-        (prefix) => prefix.category == state.selectedCategory.name
-      );
-    },
-    getSuffixesByCategory: (state) => {
-      return state.suffixes.filter(
-        (suffixes) => suffixes.category == state.selectedCategory.name
       );
     },
   },
