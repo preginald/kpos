@@ -35,9 +35,6 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-actions>
-      <v-btn @click="prepareProducts">Add to menu</v-btn>
-    </v-card-actions>
     <MenuTable />
   </v-card>
 </template>
