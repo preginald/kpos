@@ -114,6 +114,7 @@ export default new Vuex.Store({
       { name: 'Ice Cream', value: 'ice cream' },
     ],
     products: [],
+    product: { name: '', price: 0 },
     asIsMenu: [],
     selectedCategory: '',
   },
@@ -180,8 +181,23 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    saveProductToMenu({ commit }, product) {
-      commit('pushProductToMenu', product);
+    saveProductToMenu({ state, commit, getters }) {
+      let product = state.product;
+      product.category = state.selectedCategory.name;
+      product.price = parseFloat(product.price).toFixed(2);
+
+      let menuProductByCategory = getters.getMenuProductByNameCategory(product);
+
+      if (typeof menuProductByCategory === 'undefined') {
+        commit('pushProductToMenu', {
+          name: product.name,
+          category: product.category,
+          price: parseFloat(product.price).toFixed(2),
+        });
+        commit('clearProductName');
+      } else {
+        console.log('Product already exists in menu table');
+      }
     },
     saveProductsToMenu({ commit, getters }, products) {
       products.forEach((product) => {

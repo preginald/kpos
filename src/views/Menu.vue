@@ -63,13 +63,6 @@ export default {
   computed: {
     ...mapState(["steps", "stepper"]),
   },
-  data: () => ({
-    activeProductCategory: {},
-    productsToInput: 1,
-    product: [{ name: "", category: "", price: 0 }],
-    category: [{ name: "", value: "" }],
-    selectedCategory: "",
-  }),
   methods: {
     ...mapMutations(["setStepper"]),
   },

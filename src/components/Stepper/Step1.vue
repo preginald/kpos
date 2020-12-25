@@ -12,12 +12,13 @@
       ></v-combobox>
     </v-card-text>
     <v-card-text v-if="selectedCategory">
-      <v-row v-for="(value, i) in productsToInput" :key="i">
+      <v-row>
         <v-col>
           <v-combobox
+            ref="name"
             label="Product"
             type="text"
-            v-model="product[i].name"
+            v-model="product.name"
             :items="productDatabase"
           ></v-combobox>
         </v-col>
@@ -25,18 +26,12 @@
           <v-text-field
             number
             label="Price"
-            v-model="product[i].price"
-            v-on:keyup.enter="addProductRow()"
+            v-model="product.price"
+            v-on:keyup.enter="saveProduct()"
           ></v-text-field>
         </v-col>
         <v-col>
-          <v-btn
-            v-if="
-              i == product.length - 1 && product[i].name && product[i].price
-            "
-            @click="addProductRow()"
-            >+ 1</v-btn
-          >
+          <v-btn v-if="product.name" @click="saveProduct()">+ 1</v-btn>
         </v-col>
       </v-row>
     </v-card-text>
@@ -56,7 +51,13 @@ export default {
   name: "Products",
   components: { MenuTable },
   computed: {
-    ...mapState(["categories", "selectedCategory", "productDatabase", "steps"]),
+    ...mapState([
+      "categories",
+      "selectedCategory",
+      "productDatabase",
+      "product",
+      "steps",
+    ]),
     ...mapGetters(["getCategoryByName"]),
     selectCategory: {
       set(category) {
@@ -69,7 +70,7 @@ export default {
   },
   data: () => ({
     productsToInput: 1,
-    product: [{ name: "", price: 0 }],
+    // product: [{ name: "", price: 0 }],
   }),
   methods: {
     ...mapMutations(["pushProducts", "pushCategory", "setSearchByCategory"]),
@@ -95,9 +96,13 @@ export default {
         return this.selectedCategory;
       }
     },
-    addProductRow() {
-      this.product.push({ name: "", price: 0 });
+    addProductRow(price) {
+      this.product.push({ name: "", price: price });
       this.productsToInput++;
+    },
+    saveProduct() {
+      this.saveProductToMenu();
+      this.$refs.name.focus();
     },
     prepareProducts() {
       let productsArray = [];
