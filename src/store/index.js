@@ -122,6 +122,7 @@ export default new Vuex.Store({
     selectedCategory: '',
     relatedCategory: '',
     relatedCategories: [],
+    menuCategories: [],
   },
   mutations: {
     pushProductToMenu(state, product) {
@@ -147,6 +148,14 @@ export default new Vuex.Store({
     },
     setSelectedCategory(state, category) {
       state.selectedCategory = category;
+    },
+    setMenuCategories(state, categories) {
+      state.menuCategories = categories;
+    },
+    pushMenuCategories(state, category) {
+      state.menuCategories.indexOf(category) === -1
+        ? state.menuCategories.push(category)
+        : console.log('This category already exists');
     },
     setRelatedCategory(state, category) {
       state.relatedCategory = category;
@@ -221,6 +230,7 @@ export default new Vuex.Store({
           price: parseFloat(product.price).toFixed(2),
         });
         commit('clearProductName');
+        commit('pushMenuCategories', product.category);
       } else {
         console.log('Product already exists in menu table');
       }
@@ -359,6 +369,11 @@ export default new Vuex.Store({
           exportProduct.name === product.name &&
           exportProduct.category === product.category
       );
+    },
+    getMenuCategories: (state) => {
+      return state.menu
+        .map((item) => item.category)
+        .filter((value, index, self) => self.indexOf(value) === index);
     },
   },
 });

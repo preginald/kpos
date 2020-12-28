@@ -3,8 +3,8 @@
     <v-card>
       <v-card-title>Categories</v-card-title>
       <v-card-text>
-        <div v-for="category in categories" :key="category.name">
-          <v-chip small label class="ma-2">{{ category.name }}</v-chip>
+        <div v-for="category in menuCategories" :key="category">
+          <v-chip small label class="ma-2">{{ category }}</v-chip>
         </div>
       </v-card-text>
       <div v-if="selectedCategory.prefixes">
@@ -32,11 +32,8 @@ import { mapState } from "vuex";
 
 export default {
   data: () => ({}),
-  computed: mapState([
-    "categories",
-    "selectedCategory",
-    "prefixes",
-    "suffixes",
-  ]),
+  computed: {
+    ...mapState(["menuCategories", "selectedCategory", "prefixes", "suffixes"]),
+  },
 };
 </script>
