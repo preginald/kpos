@@ -102,36 +102,6 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-text v-if="form == 'inc_'">
-      <v-row>
-        <v-col>
-          <v-text-field
-            number
-            label="Start price"
-            v-model="inc.price"
-            v-on:keyup="incPreviewTable"
-          ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-text-field
-            number
-            label="Inc amount"
-            v-model="inc.amount"
-            v-on:keyup="incPreviewTable"
-          ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-text-field
-            label="Inc steps"
-            v-model="inc.steps"
-            v-on:keyup="incPreviewTable"
-          ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-btn @click="saveInc(inc)">Add inc</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-text>
     <v-card-actions>
       <v-col v-if="selectedCategory.add">
         <v-text-field
