@@ -441,9 +441,7 @@ export default {
         productsArray = this.permutatePrefixes(productsArray);
       }
 
-      // if (this.relatedCategories.prefixes) {
-      //   productsArray = this.permutateRelatedCategoryPrefixes(productsArray);
-      // }
+      productsArray = this.permutateRelatedCategoryPrefixes(productsArray);
 
       this.saveProductsToXmenu(productsArray);
     },
@@ -520,20 +518,24 @@ export default {
     },
 
     permutateRelatedCategoryPrefixes(productsArray) {
-      productsArray.forEach((product) => {
-        this.relatedCategories.prefixes.forEach((prefix) => {
-          productsArray.push({
-            name: prefix.value + " " + product.name,
-            category: this.relatedCategories.name,
-            modifier: prefix.name,
-            prefix: prefix.name,
-            suffix: product.suffix,
-            price: this.priceToFixed(
-              Number(product.price) + Number(prefix.price)
-            ),
+      if (this.relatedCategories) {
+        if (this.relatedCategories.prefixes) {
+          productsArray.forEach((product) => {
+            this.relatedCategories.prefixes.forEach((prefix) => {
+              productsArray.push({
+                name: prefix.value + " " + product.name,
+                category: this.relatedCategories.name,
+                modifier: prefix.name,
+                prefix: prefix.name,
+                suffix: product.suffix,
+                price: this.priceToFixed(
+                  Number(product.price) + Number(prefix.price)
+                ),
+              });
+            });
           });
-        });
-      });
+        }
+      }
       return productsArray;
     },
 
