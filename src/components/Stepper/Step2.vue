@@ -219,6 +219,7 @@
       </v-card-actions>
     </v-card>
     <v-card-actions>
+      <v-checkbox v-model="importRootProducts"></v-checkbox>
       <v-btn @click="addProducts" v-if="selectedMenuRows.length"
         >Apply Permutations</v-btn
       >
@@ -271,6 +272,7 @@ export default {
     product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
     moveCategory: "",
+    importRootProducts: true,
     toggle_exclusive: null,
     form: null,
     prefix: { name: "", value: "", price: "" },
@@ -398,6 +400,7 @@ export default {
             name: product.name,
             category: product.category,
             price: product.price,
+            ommit: !this.importRootProducts,
           });
         }
         if (this.selectedCategory.add) {
@@ -420,9 +423,7 @@ export default {
         productsArray = this.permutateSuffixes(productsArray);
       }
 
-      if (this.selectedCategory.prefixes) {
-        productsArray = this.permutatePrefixes(productsArray);
-      }
+      productsArray = this.permutatePrefixes(productsArray);
 
       productsArray = this.permutateRelatedCategoryPrefixes(productsArray);
 
@@ -484,31 +485,14 @@ export default {
     },
 
     permutatePrefixes(productsArray) {
-      productsArray.forEach((product) => {
-        this.selectedCategory.prefixes.forEach((prefix) => {
-          productsArray.push({
-            name: prefix.value + " " + product.name,
-            category: product.category,
-            modifier: prefix.name,
-            prefix: prefix.name,
-            suffix: product.suffix,
-            price: this.priceToFixed(
-              Number(product.price) + Number(prefix.price)
-            ),
-          });
-        });
-      });
-      return productsArray;
-    },
-
-    permutateRelatedCategoryPrefixes(productsArray) {
-      if (this.relatedCategories) {
-        if (this.relatedCategories.prefixes) {
-          productsArray.forEach((product) => {
-            this.relatedCategories.prefixes.forEach((prefix) => {
+      if (this.selectedCategory.prefixes) {
+        productsArray.forEach((product) => {
+          console.log(product);
+          if (product.ommit != true) {
+            this.selectedCategory.prefixes.forEach((prefix) => {
               productsArray.push({
                 name: prefix.value + " " + product.name,
-                category: this.relatedCategories.name,
+                category: product.category,
                 modifier: prefix.name,
                 prefix: prefix.name,
                 suffix: product.suffix,
@@ -517,6 +501,30 @@ export default {
                 ),
               });
             });
+          }
+        });
+      }
+      return productsArray;
+    },
+
+    permutateRelatedCategoryPrefixes(productsArray) {
+      if (this.relatedCategories) {
+        if (this.relatedCategories.prefixes) {
+          productsArray.forEach((product) => {
+            if (product.ommit != true) {
+              this.relatedCategories.prefixes.forEach((prefix) => {
+                productsArray.push({
+                  name: prefix.value + " " + product.name,
+                  category: this.relatedCategories.name,
+                  modifier: prefix.name,
+                  prefix: prefix.name,
+                  suffix: product.suffix,
+                  price: this.priceToFixed(
+                    Number(product.price) + Number(prefix.price)
+                  ),
+                });
+              });
+            }
           });
         }
       }

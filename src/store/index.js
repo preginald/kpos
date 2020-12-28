@@ -237,7 +237,9 @@ export default new Vuex.Store({
     saveProductsToXmenu({ commit, getters }, products) {
       products.forEach((product) => {
         if (
-          typeof getters.getXmenuProductByNameCategory(product) === 'undefined'
+          typeof getters.getXmenuProductByNameCategory(product) ===
+            'undefined' &&
+          product.ommit != true
         ) {
           commit('pushProductToXmenu', product);
         }
