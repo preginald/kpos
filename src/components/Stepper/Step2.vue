@@ -219,7 +219,10 @@
       </v-card-actions>
     </v-card>
     <v-card-actions>
-      <v-checkbox v-model="importRootProducts"></v-checkbox>
+      <v-checkbox
+        v-model="importRootProducts"
+        v-if="selectedMenuRows.length"
+      ></v-checkbox>
       <v-btn @click="addProducts" v-if="selectedMenuRows.length"
         >Apply Permutations</v-btn
       >
