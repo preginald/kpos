@@ -68,7 +68,7 @@ export default new Vuex.Store({
     xmenu: [],
     selectedMenuRows: [],
     categories: [
-      { name: 'Burgers', value: 'burgers', prefix: true },
+      { name: 'Burgers', value: 'burgers' },
       {
         name: 'Burger Extra',
         value: 'burger extra',
@@ -161,13 +161,19 @@ export default new Vuex.Store({
       state.relatedCategory = category;
     },
     setRelatedCategories(state, relatedCategories) {
-      state.relatedCategories = relatedCategories;
+      state.relatedCategories.push(relatedCategories);
     },
     setRelatedCategoryToSelectedCategory(state, relatedCategory) {
-      state.selectedCategory.relatedCategory = [];
-      state.selectedCategory.relatedCategory.push({
-        name: relatedCategory.name,
-      });
+      if (state.selectedCategory.relatedCategories) {
+        state.selectedCategory.relatedCategories.push({
+          name: relatedCategory.name,
+        });
+      } else {
+        state.selectedCategory.relatedCategories = [];
+        state.selectedCategory.relatedCategories.push({
+          name: relatedCategory.name,
+        });
+      }
     },
     setSearchByCategory(state) {
       state.search = state.selectedCategory.name;
@@ -191,10 +197,15 @@ export default new Vuex.Store({
       state.categories.push(prefix);
     },
     pushSuffix(state, suffix) {
-      state.categories.push(suffix);
+      if (state.selectedCategory.pre) state.categories.push(suffix);
     },
     setPrefix(state, prefix) {
-      state.selectedCategory.prefixes.push(prefix);
+      if (state.selectedCategory.prefixes == null) {
+        state.selectedCategory.prefixes = [];
+        state.selectedCategory.prefixes.push(prefix);
+      } else {
+        state.selectedCategory.prefixes.push(prefix);
+      }
     },
     setInc(state, inc) {
       state.selectedCategory.inc = inc;
@@ -202,11 +213,18 @@ export default new Vuex.Store({
     setPrefixToRelatedCategory(state, prefix) {
       if (state.relatedCategory.prefixes == null) {
         state.relatedCategory.prefixes = [];
+        state.relatedCategory.prefixes.push(prefix);
+      } else {
+        state.relatedCategory.prefixes.push(prefix);
       }
-      state.relatedCategory.prefixes.push(prefix);
     },
     setSuffix(state, suffix) {
-      state.selectedCategory.suffixes.push(suffix);
+      if (state.selectedCategory.suffixes == null) {
+        state.selectedCategory.suffixes = [];
+        state.selectedCategory.suffixes.push(suffix);
+      } else {
+        state.selectedCategory.suffixes.push(suffix);
+      }
     },
     setSize(state, size) {
       state.selectedCategory.sizes.push(size);
@@ -262,16 +280,22 @@ export default new Vuex.Store({
     },
     savePrefix({ commit, getters }, prefix) {
       prefix.price = parseFloat(prefix.price).toFixed(2);
-      if (prefix.relatedCategory == null) {
+
+      if (prefix.relatedCategory == '') {
         if (typeof getters.getCategoryPrefixByName(prefix) === 'undefined') {
           commit('setPrefix', prefix);
         }
       } else {
-        let relatedCategory = { name: prefix.relatedCategory };
+        let relatedCategory = { name: prefix.relatedCategory, type: 'prefix' };
         commit('pushCategory', relatedCategory);
         commit('setRelatedCategory', relatedCategory);
         commit('setPrefixToRelatedCategory', prefix);
         commit('setRelatedCategoryToSelectedCategory', relatedCategory);
+        commit('pushMenuCategories', relatedCategory.name);
+        let relatedCategories = getters.getRelatedCategoriesBySelectedCategory(
+          relatedCategory.name
+        );
+        commit('setRelatedCategories', relatedCategories);
       }
     },
     saveSuffix({ commit, getters }, suffix) {
@@ -294,12 +318,17 @@ export default new Vuex.Store({
       }
     },
     changeCategory({ commit, getters }, category) {
+      commit('setSelectedCategory', category);
+      commit('setSearchByCategory', category);
       let relatedCategories = getters.getRelatedCategoriesBySelectedCategory(
         category.name
       );
-      commit('setSelectedCategory', category);
-      commit('setSearchByCategory', category);
-      commit('setRelatedCategories', relatedCategories);
+      if (relatedCategories) {
+        commit('setRelatedCategories', relatedCategories);
+      } else {
+        commit('setRelatedCategories', []);
+        commit('setRelatedCategory', {});
+      }
     },
     changeSelectedCategoryFromSidebar({ commit, getters }, category) {
       let categoryObject = getters.getCategoryByName(category);
@@ -315,21 +344,44 @@ export default new Vuex.Store({
     getCategoryIndexByName: (state) => (name) => {
       return state.categories.findIndex((category) => category.name == name);
     },
+
     getCategoryByName: (state) => (name) => {
       return state.categories.find((category) => category.name == name);
     },
+
     getRelatedCategoriesBySelectedCategory: (state) => (name) => {
-      return state.categories.find((category) => category.related == name);
+      if (state.selectedCategory.relatedCategories) {
+        return state.selectedCategory.relatedCategories.find(
+          (category) => category.name == name
+        );
+      } else {
+        return null;
+      }
     },
+
+    // getRelatedCategoriesBySelectedCategory: (state) => (name) => {
+    //   if (state.selectedCategory.relatedCategories) {
+    //     return state.selectedCategory.relatedCategories.find(
+    //       (category) => category.name == name
+    //     );
+    //   } else {
+    //     return null;
+    //   }
+    // },
+
     getCategoryPrefixIndexByName: (state) => (name) => {
       return state.selectedCategory.prefixes.findIndex(
         (prefix) => prefix.name == name
       );
     },
     getCategoryPrefixByName: (state) => (prefix) => {
-      return state.selectedCategory.prefixes.find(
-        (categoryPrefix) => categoryPrefix.name === prefix.name
-      );
+      if (state.selectedMenuRows.prefixes) {
+        return state.selectedCategory.prefixes.find(
+          (categoryPrefix) => categoryPrefix.name === prefix.name
+        );
+      } else {
+        return undefined;
+      }
     },
     getCategoryPrefixByValue: (state) => (prefix) => {
       return state.selectedCategory.prefixes.find(
@@ -337,9 +389,13 @@ export default new Vuex.Store({
       );
     },
     getCategorySuffixByName: (state) => (suffix) => {
-      return state.selectedCategory.suffixes.find(
-        (categorySuffix) => categorySuffix.name === suffix.name
-      );
+      if (state.selectedCategory.suffixes) {
+        return state.selectedCategory.suffixes.find(
+          (categorySuffix) => categorySuffix.name === suffix.name
+        );
+      } else {
+        return undefined;
+      }
     },
     getCategorySizeByName: (state) => (size) => {
       return state.selectedCategory.sizes.find(

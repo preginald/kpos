@@ -145,9 +145,9 @@
         ></v-text-field>
       </v-col>
     </v-card-actions>
-    <v-card-actions v-if="relatedCategories">
+    <v-card-actions v-if="relatedCategory">
       <v-col
-        v-for="relatedPrefix in relatedCategories.prefixes"
+        v-for="relatedPrefix in relatedCategory.prefixes"
         :key="relatedPrefix.name"
         cols="12"
         sm="2"
@@ -249,6 +249,7 @@ export default {
     ...mapState([
       "selectedCategory",
       "relatedCategories",
+      "relatedCategory",
       "selectedMenuRows",
       "categories",
       "productDatabase",
@@ -345,8 +346,17 @@ export default {
         price: this.prefix.price,
       };
       if (this.moveCategory != null) {
+        // this.moveCategory = 'GF Burger'
         prefix.relatedCategory = this.moveCategory;
+        // prefix.relatedCategory = 'GF Burger'
       }
+      // prefix = {
+      //   name: "GF",
+      //   value: "GF",
+      //   price: "1",
+      //   relatedCategory: "GF Burger"
+      // }
+
       this.savePrefix(prefix);
       this.prefix = { name: "", value: "" };
     },
@@ -356,6 +366,7 @@ export default {
         value: this.suffix.value,
         price: this.suffix.price,
       };
+      console.log(suffix);
       this.saveSuffix(suffix);
       this.suffix = { name: "", value: "" };
     },
@@ -398,14 +409,13 @@ export default {
     addProducts() {
       let productsArray = [];
       this.selectedMenuRows.forEach((product) => {
-        if (product.price != 0) {
-          productsArray.push({
-            name: product.name,
-            category: product.category,
-            price: product.price,
-            ommit: !this.importRootProducts,
-          });
-        }
+        productsArray.push({
+          name: product.name,
+          category: product.category,
+          price: product.price,
+          ommit: !this.importRootProducts,
+        });
+
         if (this.selectedCategory.add) {
           productsArray = this.permutateAdd(productsArray, product);
         }
@@ -511,14 +521,14 @@ export default {
     },
 
     permutateRelatedCategoryPrefixes(productsArray) {
-      if (this.relatedCategories) {
-        if (this.relatedCategories.prefixes) {
+      if (this.relatedCategory) {
+        if (this.relatedCategory.prefixes) {
           productsArray.forEach((product) => {
             if (product.ommit != true) {
-              this.relatedCategories.prefixes.forEach((prefix) => {
+              this.relatedCategory.prefixes.forEach((prefix) => {
                 productsArray.push({
                   name: prefix.value + " " + product.name,
-                  category: this.relatedCategories.name,
+                  category: this.relatedCategory.name,
                   modifier: prefix.name,
                   prefix: prefix.name,
                   suffix: product.suffix,
