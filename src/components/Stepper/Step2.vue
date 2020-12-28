@@ -49,6 +49,9 @@
           ></v-text-field>
         </v-col>
         <v-col>
+          <v-text-field label="Category" v-model="moveCategory"></v-text-field>
+        </v-col>
+        <v-col>
           <v-btn @click="addPrefix">Add Prefix</v-btn>
         </v-col>
       </v-row>
@@ -142,6 +145,21 @@
         ></v-text-field>
       </v-col>
     </v-card-actions>
+    <v-card-actions v-if="relatedCategories">
+      <v-col
+        v-for="relatedPrefix in relatedCategories.prefixes"
+        :key="relatedPrefix.name"
+        cols="12"
+        sm="2"
+      >
+        <v-text-field
+          number
+          :label="relatedPrefix.name"
+          v-model="relatedPrefix.price"
+          :hint="relatedPrefix.value"
+        ></v-text-field>
+      </v-col>
+    </v-card-actions>
     <v-card-actions v-if="selectedCategory.suffixes">
       <v-col
         v-for="suffix in selectedCategory.suffixes"
@@ -181,6 +199,7 @@ export default {
   computed: {
     ...mapState([
       "selectedCategory",
+      "relatedCategories",
       "selectedMenuRows",
       "categories",
       "productDatabase",
@@ -202,15 +221,11 @@ export default {
     productsToInput: 1,
     product: [{ name: "", category: "", price: 0 }],
     category: [{ name: "", value: "" }],
+    moveCategory: "",
     toggle_exclusive: null,
-    // form: {
-    //   prefix: false,
-    //   suffix: false,
-    //   size: false,
-    //   increment: false,
-    // },
     form: null,
     prefix: { name: "", value: "", price: "" },
+    relatedPrefix: { name: "", value: "", price: "" },
     suffix: { name: "", value: "", price: "" },
     size: { name: "", value: "", price: "" },
     price: { add: 0, minus: 0 },
@@ -246,6 +261,9 @@ export default {
         value: this.prefix.value,
         price: this.prefix.price,
       };
+      if (this.moveCategory != null) {
+        prefix.relatedCategory = this.moveCategory;
+      }
       this.savePrefix(prefix);
       this.prefix = { name: "", value: "" };
     },
@@ -324,6 +342,10 @@ export default {
         productsArray = this.permutatePrefixes(productsArray);
       }
 
+      if (this.relatedCategories.prefixes) {
+        productsArray = this.permutateRelatedCategoryPrefixes(productsArray);
+      }
+
       this.saveProductsToXmenu(productsArray);
     },
 
@@ -371,6 +393,24 @@ export default {
           productsArray.push({
             name: prefix.value + " " + product.name,
             category: product.category,
+            modifier: prefix.name,
+            prefix: prefix.name,
+            suffix: product.suffix,
+            price: this.priceToFixed(
+              Number(product.price) + Number(prefix.price)
+            ),
+          });
+        });
+      });
+      return productsArray;
+    },
+
+    permutateRelatedCategoryPrefixes(productsArray) {
+      productsArray.forEach((product) => {
+        this.relatedCategories.prefixes.forEach((prefix) => {
+          productsArray.push({
+            name: prefix.value + " " + product.name,
+            category: this.relatedCategories.name,
             modifier: prefix.name,
             prefix: prefix.name,
             suffix: product.suffix,

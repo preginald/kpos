@@ -78,26 +78,18 @@ export default new Vuex.Store({
       {
         name: 'Fish',
         value: 'fish',
-        prefixes: [
-          {
-            name: 'GF',
-            value: 'GF',
-            price: '.50',
-          },
-        ],
         suffixes: [
-          {
-            name: 'Grill',
-            value: 'G',
-            price: '0.40',
-          },
-          {
-            name: 'Flour',
-            value: 'F',
-            price: '0',
-          },
+          // {
+          //   name: 'Grill',
+          //   value: 'G',
+          //   price: '0.40',
+          // },
+          // {
+          //   name: 'Flour',
+          //   value: 'F',
+          //   price: '0',
+          // },
         ],
-        prefix: true,
       },
       { name: 'Souvlaki', value: 'souvlaki' },
       { name: 'Gyros', value: 'gyros' },
@@ -112,11 +104,24 @@ export default new Vuex.Store({
       { name: 'Chips', value: 'chips' },
       { name: 'Sweets', value: 'sweets' },
       { name: 'Ice Cream', value: 'ice cream' },
+      {
+        name: 'GF Fish',
+        related: 'Fish',
+        prefixes: [
+          {
+            name: 'GF',
+            value: 'GF',
+            price: '2.00',
+          },
+        ],
+      },
     ],
     products: [],
     product: { name: '', price: 0 },
     asIsMenu: [],
     selectedCategory: '',
+    relatedCategory: '',
+    relatedCategories: [],
   },
   mutations: {
     pushProductToMenu(state, product) {
@@ -142,6 +147,18 @@ export default new Vuex.Store({
     },
     setSelectedCategory(state, category) {
       state.selectedCategory = category;
+    },
+    setRelatedCategory(state, category) {
+      state.relatedCategory = category;
+    },
+    setRelatedCategories(state, relatedCategories) {
+      state.relatedCategories = relatedCategories;
+    },
+    setRelatedCategoryToSelectedCategory(state, relatedCategory) {
+      state.selectedCategory.relatedCategory = [];
+      state.selectedCategory.relatedCategory.push({
+        name: relatedCategory.name,
+      });
     },
     setSearchByCategory(state) {
       state.search = state.selectedCategory.name;
@@ -169,6 +186,12 @@ export default new Vuex.Store({
     },
     setPrefix(state, prefix) {
       state.selectedCategory.prefixes.push(prefix);
+    },
+    setPrefixToRelatedCategory(state, prefix) {
+      if (state.relatedCategory.prefixes == null) {
+        state.relatedCategory.prefixes = [];
+      }
+      state.relatedCategory.prefixes.push(prefix);
     },
     setSuffix(state, suffix) {
       state.selectedCategory.suffixes.push(suffix);
@@ -224,8 +247,16 @@ export default new Vuex.Store({
     },
     savePrefix({ commit, getters }, prefix) {
       prefix.price = parseFloat(prefix.price).toFixed(2);
-      if (typeof getters.getCategoryPrefixByName(prefix) === 'undefined') {
-        commit('setPrefix', prefix);
+      if (prefix.relatedCategory == null) {
+        if (typeof getters.getCategoryPrefixByName(prefix) === 'undefined') {
+          commit('setPrefix', prefix);
+        }
+      } else {
+        let relatedCategory = { name: prefix.relatedCategory };
+        commit('pushCategory', relatedCategory);
+        commit('setRelatedCategory', relatedCategory);
+        commit('setPrefixToRelatedCategory', prefix);
+        commit('setRelatedCategoryToSelectedCategory', relatedCategory);
       }
     },
     saveSuffix({ commit, getters }, suffix) {
@@ -240,9 +271,13 @@ export default new Vuex.Store({
         commit('setSize', size);
       }
     },
-    changeCategory({ commit }, category) {
+    changeCategory({ commit, getters }, category) {
+      let relatedCategories = getters.getRelatedCategoriesBySelectedCategory(
+        category.name
+      );
       commit('setSelectedCategory', category);
       commit('setSearchByCategory', category);
+      commit('setRelatedCategories', relatedCategories);
     },
     deleteXmenu({ commit }) {
       commit('setXmenu', []);
@@ -255,6 +290,9 @@ export default new Vuex.Store({
     },
     getCategoryByName: (state) => (name) => {
       return state.categories.find((category) => category.name == name);
+    },
+    getRelatedCategoriesBySelectedCategory: (state) => (name) => {
+      return state.categories.find((category) => category.related == name);
     },
     getCategoryPrefixIndexByName: (state) => (name) => {
       return state.selectedCategory.prefixes.findIndex(
