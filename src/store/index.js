@@ -272,6 +272,7 @@ export default new Vuex.Store({
           commit('pushProductToXmenu', product);
         }
       });
+      commit('setSelectedMenuRows', []);
     },
     saveProductsToExport({ getters }, products) {
       products.forEach((product) => {

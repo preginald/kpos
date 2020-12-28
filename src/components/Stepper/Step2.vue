@@ -456,6 +456,7 @@ export default {
         name = product.name + " " + namePrice;
         price = this.priceToFixed(namePrice);
       }
+      this.previewTableItems = [];
       return productsArray;
     },
 
