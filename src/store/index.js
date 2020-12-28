@@ -301,6 +301,11 @@ export default new Vuex.Store({
       commit('setSearchByCategory', category);
       commit('setRelatedCategories', relatedCategories);
     },
+    changeSelectedCategoryFromSidebar({ commit, getters }, category) {
+      let categoryObject = getters.getCategoryByName(category);
+      commit('setSelectedCategory', categoryObject);
+      commit('setSearchByCategory', categoryObject);
+    },
     deleteXmenu({ commit }) {
       commit('setXmenu', []);
     },

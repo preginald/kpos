@@ -4,7 +4,13 @@
       <v-card-title>Categories</v-card-title>
       <v-card-text>
         <div v-for="category in menuCategories" :key="category">
-          <v-chip small label class="ma-2">{{ category }}</v-chip>
+          <v-chip
+            small
+            label
+            class="ma-2"
+            @click="changeSelectedCategoryFromSidebar(category)"
+            >{{ category }}</v-chip
+          >
         </div>
       </v-card-text>
       <div v-if="selectedCategory.prefixes">
@@ -28,12 +34,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data: () => ({}),
   computed: {
     ...mapState(["menuCategories", "selectedCategory", "prefixes", "suffixes"]),
+  },
+  methods: {
+    ...mapActions(["changeSelectedCategoryFromSidebar"]),
   },
 };
 </script>
