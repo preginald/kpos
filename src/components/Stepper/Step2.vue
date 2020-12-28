@@ -209,7 +209,7 @@
             { text: 'price', value: 'price' },
           ]"
           :items="previewTableItems"
-          hide-actions
+          :hide-default-footer="false"
           class="elevation-1"
           pagination.sync="pagination"
           item-key="name"
@@ -219,8 +219,10 @@
       </v-card-actions>
     </v-card>
     <v-card-actions>
-      <v-btn @click="addProducts">Apply Permutations</v-btn>
-      <v-btn @click="deleteXmenu"
+      <v-btn @click="addProducts" v-if="selectedMenuRows.length"
+        >Apply Permutations</v-btn
+      >
+      <v-btn @click="deleteXmenu" v-if="xmenu.length"
         >Delete
 
         <v-icon right> mdi-trash-can-outline </v-icon>
@@ -248,6 +250,7 @@ export default {
       "productDatabase",
       "e1",
       "steps",
+      "xmenu",
     ]),
     ...mapGetters(["getCategoryByName"]),
     selectCategory: {
