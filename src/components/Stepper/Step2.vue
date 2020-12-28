@@ -286,6 +286,7 @@ export default {
       "savePrefix",
       "saveSuffix",
       "saveSize",
+      "saveInc",
       "saveProductToMenu",
       "saveProductsToMenu",
       "saveProductsToXmenu",

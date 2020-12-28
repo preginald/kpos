@@ -187,6 +187,9 @@ export default new Vuex.Store({
     setPrefix(state, prefix) {
       state.selectedCategory.prefixes.push(prefix);
     },
+    setInc(state, inc) {
+      state.selectedCategory.inc = inc;
+    },
     setPrefixToRelatedCategory(state, prefix) {
       if (state.relatedCategory.prefixes == null) {
         state.relatedCategory.prefixes = [];
@@ -271,6 +274,13 @@ export default new Vuex.Store({
         commit('setSize', size);
       }
     },
+    saveInc({ commit, getters }, inc) {
+      inc.price = parseFloat(inc.price).toFixed(2);
+
+      if (typeof getters.getCategoryInc === 'undefined') {
+        commit('setInc', inc);
+      }
+    },
     changeCategory({ commit, getters }, category) {
       let relatedCategories = getters.getRelatedCategoriesBySelectedCategory(
         category.name
@@ -318,6 +328,9 @@ export default new Vuex.Store({
       return state.selectedCategory.sizes.find(
         (categorySize) => categorySize.name === size.name
       );
+    },
+    getCategoryInc: (state) => {
+      return state.selectedCategory['inc'];
     },
     getCategorySuffixByValue: (state) => (suffix) => {
       return state.selectedCategory.prefixes.find(
