@@ -102,7 +102,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-text v-if="form == 'inc'">
+    <v-card-text v-if="form == 'inc_'">
       <v-row>
         <v-col>
           <v-text-field
@@ -205,12 +205,12 @@
         ></v-text-field>
       </v-col>
     </v-card-actions>
-    <v-card-actions v-if="selectedCategory.inc">
+    <v-card-actions v-if="selectedCategory.inc || form == 'inc'">
       <v-col>
         <v-text-field
           number
           label="Start price"
-          v-model="selectedCategory.inc.price"
+          v-model="inc.price"
           v-on:keyup="incPreviewTable"
         ></v-text-field>
       </v-col>
@@ -218,14 +218,14 @@
         <v-text-field
           number
           label="Inc amount"
-          v-model="selectedCategory.inc.amount"
+          v-model="inc.amount"
           v-on:keyup="incPreviewTable"
         ></v-text-field>
       </v-col>
       <v-col>
         <v-text-field
           label="Inc steps"
-          v-model="selectedCategory.inc.steps"
+          v-model="inc.steps"
           v-on:keyup="incPreviewTable"
         ></v-text-field>
       </v-col>
@@ -289,6 +289,9 @@ export default {
       },
     },
   },
+  mounted() {
+    this.checkInc();
+  },
   data: () => ({
     activeProductCategory: {},
     productsToInput: 1,
@@ -302,7 +305,7 @@ export default {
     suffix: { name: "", value: "", price: "" },
     size: { name: "", value: "", price: "" },
     price: { add: 0, minus: 0 },
-    inc: { price: 0, amount: 0, steps: 2 },
+    inc: { price: 0, amount: 0, steps: 0 },
     showPreviewTable: false,
     previewTableItems: [],
   }),
@@ -319,6 +322,13 @@ export default {
       "saveProductsToXmenu",
       "deleteXmenu",
     ]),
+    checkInc() {
+      if (this.selectedCategory.inc) {
+        this.inc = this.selectCategory.inc;
+      } else {
+        // do nothing
+      }
+    },
     incPreviewTable() {
       this.previewTableItems = [];
       let inc = this.selectCategory.inc ? this.selectedCategory.inc : this.inc;
@@ -331,8 +341,8 @@ export default {
           this.previewTableItems.push({ name: name, price: price });
           price = Number(price) + Number(inc.amount);
           name = "Item " + price;
-          console.log(this.previewTableItems);
         }
+        this.saveInc(this.inc);
       } else {
         this.showPreviewTable = false;
       }
