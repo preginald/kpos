@@ -18,11 +18,11 @@
           <v-btn v-on:click="showForm('suffix')" :value="2" text> SUF </v-btn>
           <v-btn v-on:click="showForm('size')" :value="3" text> SIZE </v-btn>
 
-          <v-btn :value="4">
+          <v-btn v-on:click="showForm('addminus')" :value="4">
             <v-icon> mdi-contrast </v-icon>
           </v-btn>
 
-          <v-btn :value="5" text> INC </v-btn>
+          <v-btn v-on:click="showForm('inc')" :value="5" text> INC </v-btn>
         </v-btn-toggle>
       </v-toolbar>
     </v-card-text>
@@ -100,6 +100,52 @@
         <v-col>
           <v-btn @click="saveSize(size)">Add Size</v-btn>
         </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-text v-if="form == 'inc'">
+      <v-row>
+        <v-col>
+          <v-text-field
+            number
+            label="Start price"
+            v-model="inc.price"
+            v-on:keyup="incPreviewTable"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            number
+            label="Inc amount"
+            v-model="inc.amount"
+            v-on:keyup="incPreviewTable"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Inc steps"
+            v-model="inc.steps"
+            v-on:keyup="incPreviewTable"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-btn @click="saveInc(inc)">Add inc</v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-if="showPreviewTable">
+        {{ previewTableItems }}
+        <v-data-table
+          :headers="[
+            { text: 'name', value: 'name' },
+            { text: 'price', value: 'price' },
+          ]"
+          :items="previewTableItems"
+          hide-actions
+          class="elevation-1"
+          pagination.sync="pagination"
+          item-key="name"
+          loading="true"
+        >
+        </v-data-table>
       </v-row>
     </v-card-text>
     <v-card-actions>
@@ -206,6 +252,7 @@ export default {
       "e1",
       "steps",
     ]),
+    ...mapGetters(["getCategoryByName"]),
     selectCategory: {
       set(category) {
         this.changeCategory(category);
@@ -214,7 +261,6 @@ export default {
         return this.selectedCategory;
       },
     },
-    ...mapGetters(["getCategoryByName"]),
   },
   data: () => ({
     activeProductCategory: {},
@@ -229,6 +275,9 @@ export default {
     suffix: { name: "", value: "", price: "" },
     size: { name: "", value: "", price: "" },
     price: { add: 0, minus: 0 },
+    inc: { price: 0, amount: 0, steps: 2 },
+    showPreviewTable: false,
+    previewTableItems: [],
   }),
   methods: {
     ...mapMutations(["pushProducts", "pushCategory"]),
@@ -242,6 +291,22 @@ export default {
       "saveProductsToXmenu",
       "deleteXmenu",
     ]),
+    incPreviewTable() {
+      this.previewTableItems = [];
+      if (this.inc.price > 0 && this.inc.amount > 0 && this.inc.steps > 1) {
+        this.showPreviewTable = true;
+        let i;
+        let name = "Item " + this.inc.price;
+        let price = this.inc.price;
+        for (i = 0; i < this.inc.steps; i++) {
+          this.previewTableItems.push({ name: name, price: price });
+          price = Number(price) + Number(this.inc.amount);
+          name = "Item " + price;
+        }
+      } else {
+        this.showPreviewTable = false;
+      }
+    },
     showForm(form) {
       if (this.form == form) {
         this.form = null;
