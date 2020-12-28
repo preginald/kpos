@@ -2,7 +2,7 @@
   <v-card v-if="menu.length">
     <v-card-title>
       <v-text-field
-        v-model="test"
+        v-model="searchValue"
         append-icon="mdi-magnify"
         label="Search"
         single-line
@@ -17,8 +17,8 @@
       :search="search"
       item-key="name"
       show-select
+      class="elevation-1"
     >
-      show-select class="elevation-1" >
       <template v-slot:item.name="props">
         <v-edit-dialog
           :return-value.sync="props.item.name"
@@ -70,7 +70,7 @@ export default {
   }),
   computed: {
     ...mapState(["menu", "search", "selectedMenuRows", "stepper"]),
-    test: {
+    searchValue: {
       set(search) {
         this.setSearch(search);
       },

@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
       <v-text-field
-        v-model="search"
+        v-model="searchValue"
         append-icon="mdi-magnify"
         label="Search"
         single-line
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -37,7 +37,19 @@ export default {
       { text: "Price", value: "price", align: "end" },
     ],
   }),
-  computed: mapState(["menu", "search", "xmenu"]),
-  methods: {},
+  computed: {
+    ...mapState(["menu", "search", "xmenu"]),
+    searchValue: {
+      set(search) {
+        this.setSearch(search);
+      },
+      get() {
+        return this.search;
+      },
+    },
+  },
+  methods: {
+    ...mapMutations(["setSearch"]),
+  },
 };
 </script>

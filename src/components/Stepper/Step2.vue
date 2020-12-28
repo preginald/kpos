@@ -434,9 +434,10 @@ export default {
       let i;
       let namePrice = inc.price.split(".")[0];
       let name = product.name + " " + namePrice;
+      let category = this.selectCategory.name;
       let price = this.priceToFixed(inc.price);
       for (i = 0; i < inc.steps; i++) {
-        productsArray.push({ name: name, price: price });
+        productsArray.push({ name: name, category: category, price: price });
         namePrice = Number(price) + Number(inc.amount);
         name = product.name + " " + namePrice;
         price = this.priceToFixed(namePrice);
