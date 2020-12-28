@@ -131,22 +131,6 @@
           <v-btn @click="saveInc(inc)">Add inc</v-btn>
         </v-col>
       </v-row>
-      <v-row v-if="showPreviewTable">
-        {{ previewTableItems }}
-        <v-data-table
-          :headers="[
-            { text: 'name', value: 'name' },
-            { text: 'price', value: 'price' },
-          ]"
-          :items="previewTableItems"
-          hide-actions
-          class="elevation-1"
-          pagination.sync="pagination"
-          item-key="name"
-          loading="true"
-        >
-        </v-data-table>
-      </v-row>
     </v-card-text>
     <v-card-actions>
       <v-col v-if="selectedCategory.add">
@@ -221,6 +205,49 @@
         ></v-text-field>
       </v-col>
     </v-card-actions>
+    <v-card-actions v-if="selectedCategory.inc">
+      <v-col>
+        <v-text-field
+          number
+          label="Start price"
+          v-model="selectedCategory.inc.price"
+          v-on:keyup="incPreviewTable"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+          number
+          label="Inc amount"
+          v-model="selectedCategory.inc.amount"
+          v-on:keyup="incPreviewTable"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+          label="Inc steps"
+          v-model="selectedCategory.inc.steps"
+          v-on:keyup="incPreviewTable"
+        ></v-text-field>
+      </v-col>
+    </v-card-actions>
+    <v-card v-if="showPreviewTable">
+      <v-card-title> Preview </v-card-title>
+      <v-card-actions>
+        <v-data-table
+          :headers="[
+            { text: 'name', value: 'name' },
+            { text: 'price', value: 'price' },
+          ]"
+          :items="previewTableItems"
+          hide-actions
+          class="elevation-1"
+          pagination.sync="pagination"
+          item-key="name"
+          loading="true"
+        >
+        </v-data-table>
+      </v-card-actions>
+    </v-card>
     <v-card-actions>
       <v-btn @click="addProducts">Apply Permutations</v-btn>
       <v-btn @click="deleteXmenu"
@@ -294,15 +321,17 @@ export default {
     ]),
     incPreviewTable() {
       this.previewTableItems = [];
-      if (this.inc.price > 0 && this.inc.amount > 0 && this.inc.steps > 1) {
+      let inc = this.selectCategory.inc ? this.selectedCategory.inc : this.inc;
+      if (inc.price > 0 && inc.amount > 0 && inc.steps > 1) {
         this.showPreviewTable = true;
         let i;
-        let name = "Item " + this.inc.price;
-        let price = this.inc.price;
-        for (i = 0; i < this.inc.steps; i++) {
+        let name = "Item " + inc.price;
+        let price = inc.price;
+        for (i = 0; i < inc.steps; i++) {
           this.previewTableItems.push({ name: name, price: price });
-          price = Number(price) + Number(this.inc.amount);
+          price = Number(price) + Number(inc.amount);
           name = "Item " + price;
+          console.log(this.previewTableItems);
         }
       } else {
         this.showPreviewTable = false;
@@ -398,6 +427,10 @@ export default {
         if (this.selectedCategory.sizes) {
           productsArray = this.permutateSizes(productsArray, product);
         }
+
+        if (this.selectedCategory.inc) {
+          productsArray = this.permutateInc(productsArray, product);
+        }
       });
 
       if (this.selectedCategory.suffixes) {
@@ -408,11 +441,26 @@ export default {
         productsArray = this.permutatePrefixes(productsArray);
       }
 
-      if (this.relatedCategories.prefixes) {
-        productsArray = this.permutateRelatedCategoryPrefixes(productsArray);
-      }
+      // if (this.relatedCategories.prefixes) {
+      //   productsArray = this.permutateRelatedCategoryPrefixes(productsArray);
+      // }
 
       this.saveProductsToXmenu(productsArray);
+    },
+
+    permutateInc(productsArray, product) {
+      let inc = this.selectedCategory.inc;
+      let i;
+      let namePrice = inc.price.split(".")[0];
+      let name = product.name + " " + namePrice;
+      let price = this.priceToFixed(inc.price);
+      for (i = 0; i < inc.steps; i++) {
+        productsArray.push({ name: name, price: price });
+        namePrice = Number(price) + Number(inc.amount);
+        name = product.name + " " + namePrice;
+        price = this.priceToFixed(namePrice);
+      }
+      return productsArray;
     },
 
     permutateAdd(productsArray, product) {
