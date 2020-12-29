@@ -70,7 +70,12 @@ export default {
     // product: [{ name: "", price: 0 }],
   }),
   methods: {
-    ...mapMutations(["pushProducts", "pushCategory", "setSearchByCategory"]),
+    ...mapMutations([
+      "pushProducts",
+      "pushCategory",
+      "pushMenuCategories",
+      "setSearchByCategory",
+    ]),
     ...mapActions([
       "changeCategory",
       "saveProductToMenu",
@@ -84,6 +89,7 @@ export default {
         //
       } else {
         this.pushCategory({ name: this.selectedCategory });
+        this.pushMenuCategories(this.selectedCategory);
       }
     },
     getCategoryName() {
