@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-row>
-      <v-col v-for="step in steps" :key="step.name" cols="12" sm="3">
+      <v-col v-for="(step, i) in steps" :key="i" cols="12" sm="3">
         <v-card>
-          <v-card-title> {{ step.name }}</v-card-title>
-          <v-card-text> </v-card-text>
+          <v-card-title> {{ i + 1 }}. {{ step.name }}</v-card-title>
+          <v-card-text> {{ step.content }} </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -17,16 +17,22 @@ export default {
   data: () => ({
     steps: [
       {
-        name: "Menu import",
+        name: "Import",
+        content: "First, take the client's menu and import them.",
       },
       {
-        name: "Prepare export",
+        name: "Analyse",
+        content:
+          "Next, we analyse the client's menu and create the POS ready product list.",
       },
       {
-        name: "Review export",
+        name: "Review",
+        content: "Next, we review the POS ready product list.",
       },
       {
-        name: "Menu export",
+        name: "Export",
+        content:
+          "Finally we export the product list in the format for the specific POS.",
       },
     ],
   }),
