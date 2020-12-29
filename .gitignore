@@ -22,3 +22,4 @@ debug.log*
 *.njsproj
 *.sln
 *.sw?
+.firebase/hosting.*.cache
